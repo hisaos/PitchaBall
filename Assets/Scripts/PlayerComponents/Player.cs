@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     None
   };
   [SerializeField] private Mode _mode;
+  public Mode mode { get { return _mode; } }
 
   private Batter _b;
   private Catcher _c;
@@ -21,9 +22,14 @@ public class Player : MonoBehaviour
   private Pitcher _p;
   private Runner _r;
 
+  private InputActions _ia;
+  public InputActions ia { get { return _ia; } }
+
   // Start is called before the first frame update
   private void Awake()
   {
+    _ia = new InputActions();
+
     _b = this.GetComponent<Batter>();
     _c = this.GetComponent<Catcher>();
     _f = this.GetComponent<Fielder>();

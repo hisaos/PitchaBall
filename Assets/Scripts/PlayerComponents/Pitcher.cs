@@ -7,6 +7,8 @@ public class Pitcher : MonoBehaviour
   private InputActions _ia;
   private Player _p;
 
+  private Vector3 _home;
+
   public float pitchSpeed = 10f;    // ボールの速度
   public float controlSpeed = 10f;  // ボールの変化速度
   public float moveSpeed = 2f;      // プレート上の移動速度
@@ -20,6 +22,9 @@ public class Pitcher : MonoBehaviour
   private void Awake()
   {
     _p = GetComponent<Player>();
+
+    _home = Vector3.zero;
+
     _ia = new InputActions();
 
     _ia.Player.A.performed += (context) =>
@@ -66,7 +71,7 @@ public class Pitcher : MonoBehaviour
     if (_ballRigidBody)
     {
       Vector2 horizontalVector = _ia.Player.Move.ReadValue<Vector2>();
-      _ballRigidBody.AddForce(Vector3.right * controlSpeed * horizontalVector.x, ForceMode.Force);
+      _ballRigidBody.AddForce(Vector3.right * controlSpeed * horizontalVector.x, ForceMode.Acceleration);
     }
   }
 
@@ -78,6 +83,11 @@ public class Pitcher : MonoBehaviour
   private void OnDisable()
   {
     _ia.Player.Disable();
+  }
+
+  public void ReturnToHome()
+  {
+    this.transform.position = _home;
   }
 
   IEnumerator MonitorBall()

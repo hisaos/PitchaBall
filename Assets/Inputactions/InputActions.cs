@@ -102,7 +102,18 @@ public class @InputActions : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""1e70d932-6273-4f8e-b31c-8281b106092b"",
-                    ""path"": ""<Joystick>/stick"",
+                    ""path"": ""<HID::MOSIC      USB 2A8K  GamePad          >/stick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6a06115a-ddd4-4e30-b67b-6fc09f8aa9f3"",
+                    ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -134,6 +145,17 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""7e72a6d5-c409-49fa-a25c-37b4375651de"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""A"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""1ff8dd4c-2419-42f7-8056-c5ab65ad11a1"",
                     ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
@@ -146,6 +168,17 @@ public class @InputActions : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""bd32ada8-c127-4ea4-a360-6c3ab95edef1"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""B"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3fec527a-2304-4ea4-8f14-80e048573d6d"",
                     ""path"": ""<HID::MOSIC      USB 2A8K  GamePad          >/button3"",
                     ""interactions"": """",
                     ""processors"": """",
