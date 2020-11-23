@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5596568074281198723}
   - component: {fileID: 3784342411939319579}
   - component: {fileID: 81117064802035089}
-  - component: {fileID: 8741699693850851304}
+  - component: {fileID: 8855599666872639986}
   - component: {fileID: 311234455583515781}
   - component: {fileID: 5341066258498423733}
   m_Layer: 0
@@ -117,7 +117,7 @@ MonoBehaviour:
   moveRightBound: 1
   ballPrefab: {fileID: 7016931380172707166, guid: 72d20e64edf4b4435ace59735db10e9c,
     type: 3}
---- !u!114 &8741699693850851304
+--- !u!114 &8855599666872639986
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -126,9 +126,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1456025629480789322}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddbe7b16c0c70994aa67f4e7d0281e82, type: 3}
+  m_Script: {fileID: 11500000, guid: e58c88d63a904354c8d9fc0ea5e08e80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rate: 0
+  speed: 10
+  _direction: 1
 --- !u!54 &311234455583515781
 Rigidbody:
   m_ObjectHideFlags: 0
