@@ -1185,7 +1185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b6095cb670d2794baca3fc3162b0225, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bat: {fileID: 778731590117591633, guid: dcc6428bf68be064abb1d37182e34908, type: 3}
+  bat: {fileID: 580865219434253428, guid: dcc6428bf68be064abb1d37182e34908, type: 3}
   moveSpeed: 0.5
 --- !u!54 &1895981417
 Rigidbody:

@@ -26,7 +26,7 @@ namespace Test
         b.transform.localPosition = this.transform.position + Vector3.forward;
         _pitchInterval = pitchInterval;
         var rb = b.GetComponent<Rigidbody>();
-        rb.AddForce(Vector3.forward * 10f + Vector3.up * 3f, ForceMode.Impulse);
+        rb.AddForce(Vector3.forward * 1f, ForceMode.Impulse);
       }
     }
   }
