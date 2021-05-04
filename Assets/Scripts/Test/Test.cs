@@ -33,7 +33,7 @@ namespace Test
     {
       _stickVector = _ia.Player.Move.ReadValue<Vector2>();
 
-      _rb.AddForce(new Vector3(_stickVector.x, 0f, _stickVector.y) * moveSpeed, ForceMode.Acceleration);
+      _rb.AddForce(new Vector3(-_stickVector.x, 0f, -_stickVector.y) * moveSpeed, ForceMode.VelocityChange);
     }
 
     private void OnEnable()
