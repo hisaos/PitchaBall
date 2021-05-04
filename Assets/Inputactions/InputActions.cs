@@ -41,6 +41,22 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Y"",
+                    ""type"": ""Button"",
+                    ""id"": ""e02a3aa2-dc18-48b0-90fb-aada0eec3011"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""X"",
+                    ""type"": ""Button"",
+                    ""id"": ""844b7c10-71c5-4181-9f04-a5dac146f438"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -186,6 +202,50 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""action"": ""B"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4c5a4aef-3d56-4f9b-8faf-50f49faa3ed0"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Y"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3fc26284-9cb4-402d-8fad-fd72b02a3117"",
+                    ""path"": ""<HID::MOSIC      USB 2A8K  GamePad          >/trigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Y"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ea64aee4-338b-440d-87e3-4f6fb1c41a14"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""X"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fe620ca4-d9ed-4092-bed6-e58599d066dd"",
+                    ""path"": ""<HID::MOSIC      USB 2A8K  GamePad          >/button2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""X"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -197,6 +257,8 @@ public class @InputActions : IInputActionCollection, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_A = m_Player.FindAction("A", throwIfNotFound: true);
         m_Player_B = m_Player.FindAction("B", throwIfNotFound: true);
+        m_Player_Y = m_Player.FindAction("Y", throwIfNotFound: true);
+        m_Player_X = m_Player.FindAction("X", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -249,6 +311,8 @@ public class @InputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_A;
     private readonly InputAction m_Player_B;
+    private readonly InputAction m_Player_Y;
+    private readonly InputAction m_Player_X;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -256,6 +320,8 @@ public class @InputActions : IInputActionCollection, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @A => m_Wrapper.m_Player_A;
         public InputAction @B => m_Wrapper.m_Player_B;
+        public InputAction @Y => m_Wrapper.m_Player_Y;
+        public InputAction @X => m_Wrapper.m_Player_X;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -274,6 +340,12 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @B.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnB;
                 @B.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnB;
                 @B.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnB;
+                @Y.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnY;
+                @Y.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnY;
+                @Y.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnY;
+                @X.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnX;
+                @X.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnX;
+                @X.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnX;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -287,6 +359,12 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @B.started += instance.OnB;
                 @B.performed += instance.OnB;
                 @B.canceled += instance.OnB;
+                @Y.started += instance.OnY;
+                @Y.performed += instance.OnY;
+                @Y.canceled += instance.OnY;
+                @X.started += instance.OnX;
+                @X.performed += instance.OnX;
+                @X.canceled += instance.OnX;
             }
         }
     }
@@ -296,5 +374,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnA(InputAction.CallbackContext context);
         void OnB(InputAction.CallbackContext context);
+        void OnY(InputAction.CallbackContext context);
+        void OnX(InputAction.CallbackContext context);
     }
 }

@@ -25,6 +25,8 @@ public class Player : MonoBehaviour
   private InputActions _ia;
   public InputActions ia { get { return _ia; } }
 
+  public Vector3 initialPosition;
+
   // Start is called before the first frame update
   private void Awake()
   {
@@ -72,6 +74,11 @@ public class Player : MonoBehaviour
         _r.enabled = true;
         break;
     }
+  }
+
+  public void ReturnToInitialPosition()
+  {
+    this.transform.position = initialPosition;
   }
 
   public void SetFielderHasBall(bool hasBall)

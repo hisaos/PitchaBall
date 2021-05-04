@@ -93,7 +93,7 @@ MonoBehaviour:
   ballPrefab: {fileID: 7016931380172707166, guid: 72d20e64edf4b4435ace59735db10e9c,
     type: 3}
   throwSpeed: 0.1
-  moveSpeed: 1000
+  moveSpeed: 20
   distance_limit: 0.1
   _hasBall: 0
   bases: []
@@ -129,6 +129,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e58c88d63a904354c8d9fc0ea5e08e80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _goAhead: 0
+  _goBack: 0
   rate: 0
   speed: 10
   _direction: 1

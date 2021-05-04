@@ -35,11 +35,11 @@ public class Fielder : MonoBehaviour
   // Bボタンの時はこれを変えるだけ
   public enum Covering
   {
+    None,
     First,
     Second,
     Third,
     Home,
-    None
   }
   public Covering cover;
   private Covering _origCover;     // 元々のカバー。ボール持って歩いてボール投げたあとの戻り先。
@@ -61,7 +61,7 @@ public class Fielder : MonoBehaviour
     {
       if (_hasBall && ballPrefab)
       {
-        _stickVector = _ia.Player.Move.ReadValue<Vector2>();
+        //_stickVector = _ia.Player.Move.ReadValue<Vector2>();
 
         Vector3 v = (bases[0].transform.position - this.transform.position).normalized;
         if (_stickVector.y < 0f)
@@ -84,7 +84,7 @@ public class Fielder : MonoBehaviour
     {
       if (_hasBall)
       {
-        _stickVector = _ia.Player.Move.ReadValue<Vector2>();
+        //_stickVector = _ia.Player.Move.ReadValue<Vector2>();
 
         cover = Covering.First;
         if (_stickVector.y < 0f)
@@ -97,9 +97,14 @@ public class Fielder : MonoBehaviour
     };
   }
 
+  private void Update()
+  {
+    _stickVector = _ia.Player.Move.ReadValue<Vector2>();
+  }
+
   private void FixedUpdate()
   {
-    if (GameManager.Instance.mode == GameManager.Mode.Main)
+    if (GameManager.Instance.mode != GameManager.Mode.Field)
       return;
 
     if (_freezeTimer > 0f)
