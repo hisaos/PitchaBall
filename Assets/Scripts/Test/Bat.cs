@@ -11,6 +11,7 @@ namespace Test
       if (other.gameObject.CompareTag("Ball"))
       {
         var r = other.gameObject.GetComponent<Rigidbody>();
+        r.velocity = Vector3.zero;
         r.AddForce((r.transform.position - other.GetContact(0).point).normalized * 2f, ForceMode.Impulse);
       }
     }

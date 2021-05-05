@@ -246,7 +246,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ball: {fileID: 6048143019902189746, guid: 570c562adf8c57749af18b55230437eb, type: 3}
-  pitchInterval: 1
+  pitchInterval: 1.5
+  pitchForwardForce: 0.8
+  pitchUpForce: 0.4
 --- !u!1 &117357659
 GameObject:
   m_ObjectHideFlags: 0

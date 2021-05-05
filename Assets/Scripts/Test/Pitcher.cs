@@ -9,11 +9,17 @@ namespace Test
   {
     public GameObject ball;
     private float _pitchInterval;
-    public float pitchInterval = 0.5f;
+    private float _pitchForwardForce;
+    private float _pitchUpForce;
+    public float pitchInterval = 1.5f;
+    public float pitchForwardForce = 0.8f;
+    public float pitchUpForce = 0.4f;
 
     void Start()
     {
       _pitchInterval = pitchInterval;
+      _pitchForwardForce = pitchForwardForce;
+      _pitchUpForce = pitchUpForce;
     }
 
     // Update is called once per frame
@@ -26,7 +32,7 @@ namespace Test
         b.transform.localPosition = this.transform.position + Vector3.forward;
         _pitchInterval = pitchInterval;
         var rb = b.GetComponent<Rigidbody>();
-        rb.AddForce(Vector3.forward * 1f + Vector3.up * 0.3f, ForceMode.Impulse);
+        rb.AddForce(Vector3.forward * _pitchForwardForce + Vector3.up * _pitchUpForce, ForceMode.Impulse);
       }
     }
   }
