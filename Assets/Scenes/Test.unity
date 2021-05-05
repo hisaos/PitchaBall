@@ -355,6 +355,7 @@ GameObject:
   - component: {fileID: 245902932}
   - component: {fileID: 245902931}
   - component: {fileID: 245902930}
+  - component: {fileID: 245902934}
   m_Layer: 0
   m_Name: Fence3
   m_TagString: Untagged
@@ -436,6 +437,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &245902934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245902929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76398f12b6ed57e45978cf6c4583319d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &356311764
 GameObject:
   m_ObjectHideFlags: 0
@@ -811,6 +824,7 @@ GameObject:
   - component: {fileID: 851702221}
   - component: {fileID: 851702220}
   - component: {fileID: 851702219}
+  - component: {fileID: 851702223}
   m_Layer: 0
   m_Name: Fence1
   m_TagString: Untagged
@@ -892,6 +906,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &851702223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 851702218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76398f12b6ed57e45978cf6c4583319d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1247456963
 GameObject:
   m_ObjectHideFlags: 0
@@ -998,6 +1024,7 @@ GameObject:
   - component: {fileID: 1634545791}
   - component: {fileID: 1634545790}
   - component: {fileID: 1634545789}
+  - component: {fileID: 1634545793}
   m_Layer: 0
   m_Name: Fence2
   m_TagString: Untagged
@@ -1079,6 +1106,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &1634545793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1634545788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76398f12b6ed57e45978cf6c4583319d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1895981411
 GameObject:
   m_ObjectHideFlags: 0
@@ -1190,6 +1229,7 @@ MonoBehaviour:
   bat: {fileID: 580865219434253428, guid: dcc6428bf68be064abb1d37182e34908, type: 3}
   maxBatAngle: 90
   minBatAngle: -90
+  power: 1
   moveSpeed: 0.5
 --- !u!54 &1895981417
 Rigidbody:
@@ -1219,6 +1259,7 @@ GameObject:
   - component: {fileID: 1909944230}
   - component: {fileID: 1909944229}
   - component: {fileID: 1909944228}
+  - component: {fileID: 1909944232}
   m_Layer: 0
   m_Name: Fence0
   m_TagString: Untagged
@@ -1300,3 +1341,15 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1909944232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909944227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76398f12b6ed57e45978cf6c4583319d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
