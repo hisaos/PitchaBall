@@ -20,6 +20,9 @@ namespace Test
     public float maxBatAngle = 90f;
     public float minBatAngle = -90f;
 
+    public float power = 2f;
+    private Bat _batComponent;
+
     [SerializeField] private float moveSpeed;
 
     private void Awake()
@@ -32,6 +35,7 @@ namespace Test
       _bat.transform.SetParent(this.transform);
       _batSwingVector = -5f;
       _batAngle = minBatAngle;
+      _batComponent = _bat.GetComponentInChildren<Bat>();
 
       _ia.Player.A.performed += (context) =>
       {
@@ -59,6 +63,7 @@ namespace Test
 
     private void Update()
     {
+      _batComponent.batterPower = power;
       _batAngle += _batSwingVector;
       if (_batAngle > maxBatAngle) _batAngle = maxBatAngle;
       else if (_batAngle < minBatAngle) _batAngle = minBatAngle;

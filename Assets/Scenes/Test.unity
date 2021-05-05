@@ -247,8 +247,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ball: {fileID: 6048143019902189746, guid: 570c562adf8c57749af18b55230437eb, type: 3}
   pitchInterval: 1.5
-  pitchForwardForce: 0.8
-  pitchUpForce: 0.4
+  pitchForwardForce: 0.6
+  pitchUpForce: 0.6
 --- !u!1 &117357659
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,7 +369,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 245902929}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 4d50da3354a8aef47bd6ba2d78bf04b4, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -825,7 +825,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 851702218}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 4d50da3354a8aef47bd6ba2d78bf04b4, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -918,7 +918,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1247456963}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 722b3281c7dee5146a009f8549693dc2, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -1012,7 +1012,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1634545788}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 4d50da3354a8aef47bd6ba2d78bf04b4, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -1233,7 +1233,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1909944227}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 4d50da3354a8aef47bd6ba2d78bf04b4, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
