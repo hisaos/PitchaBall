@@ -758,6 +758,7 @@ GameObject:
   - component: {fileID: 493795641}
   - component: {fileID: 493795640}
   - component: {fileID: 493795644}
+  - component: {fileID: 493795645}
   m_Layer: 0
   m_Name: OutFielder1
   m_TagString: Untagged
@@ -852,6 +853,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c191fe7f0fcc84d4da9fd34f74cf0be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!54 &493795645
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 493795639}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 116
+  m_CollisionDetection: 0
 --- !u!1 &522938958
 GameObject:
   m_ObjectHideFlags: 0
@@ -1157,6 +1174,7 @@ GameObject:
   - component: {fileID: 819033825}
   - component: {fileID: 819033824}
   - component: {fileID: 819033828}
+  - component: {fileID: 819033829}
   m_Layer: 0
   m_Name: InFielder1
   m_TagString: Untagged
@@ -1251,6 +1269,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c191fe7f0fcc84d4da9fd34f74cf0be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!54 &819033829
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 819033823}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 116
+  m_CollisionDetection: 0
 --- !u!1 &851702218
 GameObject:
   m_ObjectHideFlags: 0
@@ -1370,6 +1404,7 @@ GameObject:
   - component: {fileID: 1095491672}
   - component: {fileID: 1095491671}
   - component: {fileID: 1095491675}
+  - component: {fileID: 1095491676}
   m_Layer: 8
   m_Name: Catcher
   m_TagString: Untagged
@@ -1464,6 +1499,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c191fe7f0fcc84d4da9fd34f74cf0be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!54 &1095491676
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1095491670}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 116
+  m_CollisionDetection: 0
 --- !u!1 &1152646727
 GameObject:
   m_ObjectHideFlags: 0
@@ -1477,6 +1528,7 @@ GameObject:
   - component: {fileID: 1152646729}
   - component: {fileID: 1152646728}
   - component: {fileID: 1152646732}
+  - component: {fileID: 1152646733}
   m_Layer: 0
   m_Name: InFielder0
   m_TagString: Untagged
@@ -1571,6 +1623,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c191fe7f0fcc84d4da9fd34f74cf0be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!54 &1152646733
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1152646727}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 116
+  m_CollisionDetection: 0
 --- !u!1 &1247456963
 GameObject:
   m_ObjectHideFlags: 0
@@ -1678,6 +1746,7 @@ GameObject:
   - component: {fileID: 1326978689}
   - component: {fileID: 1326978688}
   - component: {fileID: 1326978692}
+  - component: {fileID: 1326978693}
   m_Layer: 0
   m_Name: OutFielder0
   m_TagString: Untagged
@@ -1772,6 +1841,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c191fe7f0fcc84d4da9fd34f74cf0be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!54 &1326978693
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326978687}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 116
+  m_CollisionDetection: 0
 --- !u!1 &1335820351
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,7 +17,7 @@ namespace Test
       if (other.gameObject.CompareTag("Ball"))
       {
         // ピッチャーを投げれる状態にする
-        ExecuteEvents.Execute<ICustomMessageTarget>(
+        ExecuteEvents.Execute<IPitcherMessageHandler>(
             target: _pitcher,
             eventData: null,
             functor: (receiver, eventData) => receiver.EnablePitch()

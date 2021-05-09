@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Test
 
 {
-  public class Pitcher : MonoBehaviour, ICustomMessageTarget
+  public class Pitcher : MonoBehaviour, IPitcherMessageHandler
   {
     public GameObject ball;
     private float _pitchInterval;
@@ -13,9 +16,12 @@ namespace Test
 
     private bool _isPitched = false;
 
+    private List<Fielder> _fielders;
+
     void Start()
     {
       _pitchInterval = pitchInterval;
+      _fielders = new List<Fielder>(FindObjectsOfType<Fielder>());
     }
 
     // Update is called once per frame
@@ -24,6 +30,8 @@ namespace Test
       if (_isPitched) return;
 
       _pitchInterval -= Time.deltaTime;
+
+      // ボールを投げる
       if (_pitchInterval < 0f)
       {
         var b = Instantiate(ball);
@@ -32,6 +40,16 @@ namespace Test
         var rb = b.GetComponent<Rigidbody>();
         rb.AddForce(Vector3.forward * pitchForwardForce + Vector3.up * pitchUpForce, ForceMode.Impulse);
         _isPitched = true;
+
+        foreach (var f in _fielders)
+        {
+          ExecuteEvents.Execute<IFielderMessageHandler>(
+                target: f.gameObject,
+                eventData: null,
+                functor: (receiver, eventData) => receiver.SetFielderBall(b)
+                );
+
+        }
       }
     }
 

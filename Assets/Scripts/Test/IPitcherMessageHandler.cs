@@ -2,7 +2,7 @@
 
 namespace Test
 {
-  public interface ICustomMessageTarget : IEventSystemHandler
+  public interface IPitcherMessageHandler : IEventSystemHandler
   {
     void EnablePitch();
   }
