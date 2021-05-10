@@ -44,11 +44,10 @@ namespace Test
         foreach (var f in _fielders)
         {
           ExecuteEvents.Execute<IFielderMessageHandler>(
-                target: f.gameObject,
-                eventData: null,
-                functor: (receiver, eventData) => receiver.SetFielderBall(b)
-                );
-
+            target: f.gameObject,
+            eventData: null,
+            functor: (receiver, eventData) => receiver.SetFielderBall(b)
+          );
         }
       }
     }

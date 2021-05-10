@@ -13,20 +13,22 @@ namespace Test
     private Rigidbody _rb;
 
     public float moveSpeed = 1f;
+    private List<Fielder> _fielders;
 
     // Start is called before the first frame update
     void Start()
     {
       _pitcher = FindObjectOfType<Pitcher>().gameObject;
       _rb = this.gameObject.GetComponent<Rigidbody>();
+      _fielders = new List<Fielder>(FindObjectsOfType<Fielder>());
     }
 
-    void Update()
+    void FixedUpdate()
     {
       // ボールを追っかけさせる
       if (!_chaseBall) return;
-
       if (!_ball) return;
+
       var ballPos = _ball.transform.position;
       var pos = this.transform.position;
       var moveDir = new Vector3(ballPos.x - pos.x, 0f, ballPos.z - pos.z).normalized;
@@ -40,10 +42,22 @@ namespace Test
       {
         // ピッチャーを投げれる状態にする
         ExecuteEvents.Execute<IPitcherMessageHandler>(
+          target: _pitcher,
+          eventData: null,
+          functor: (receiver, eventData) => receiver.EnablePitch()
+        );
+
+        foreach (var f in _fielders)
+        {
+          ExecuteEvents.Execute<IFielderMessageHandler>(
             target: _pitcher,
             eventData: null,
-            functor: (receiver, eventData) => receiver.EnablePitch()
-        );
+            functor: (receiver, eventData) => {
+              receiver.ResetFielderBall();
+              receiver.DisableFielderMove();
+            }
+          );
+        }
 
         // ボールを消す（即時）->捕球
         Destroy(other.gameObject);
@@ -75,6 +89,7 @@ namespace Test
     public void DisableFielderMove()
     {
       Debug.Log("DisableFielderMove");
+      _rb.velocity = Vector3.zero;
       _chaseBall = false;
     }
   }

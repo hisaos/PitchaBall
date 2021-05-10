@@ -171,6 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c191fe7f0fcc84d4da9fd34f74cf0be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 0.3
 --- !u!136 &101297642
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -853,6 +854,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c191fe7f0fcc84d4da9fd34f74cf0be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 0.3
 --- !u!54 &493795645
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1269,6 +1271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c191fe7f0fcc84d4da9fd34f74cf0be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 0.3
 --- !u!54 &819033829
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1499,6 +1502,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c191fe7f0fcc84d4da9fd34f74cf0be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 0.3
 --- !u!54 &1095491676
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1623,6 +1627,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c191fe7f0fcc84d4da9fd34f74cf0be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 0.3
 --- !u!54 &1152646733
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1841,6 +1846,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c191fe7f0fcc84d4da9fd34f74cf0be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 0.3
 --- !u!54 &1326978693
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2393,7 +2399,7 @@ MonoBehaviour:
   maxBatAngle: 90
   minBatAngle: -90
   power: 1
-  moveSpeed: 0.5
+  moveSpeed: 0.2
 --- !u!54 &1895981417
 Rigidbody:
   m_ObjectHideFlags: 0

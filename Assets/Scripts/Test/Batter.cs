@@ -57,6 +57,7 @@ namespace Test
     private void FixedUpdate()
     {
       _stickVector = _ia.Player.Move.ReadValue<Vector2>();
+      //Debug.Log("x:" + _stickVector.x + " y:" + _stickVector.y);
 
       _rb.AddForce(new Vector3(-_stickVector.x, 0f, -_stickVector.y) * moveSpeed, ForceMode.VelocityChange);
     }
