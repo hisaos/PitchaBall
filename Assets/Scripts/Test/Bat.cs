@@ -12,11 +12,13 @@ namespace Test
     private Collider _col;
 
     private GameObject _pitcher;
+    private List<Fielder> _fielders;
 
     void Start()
     {
       _col = GetComponentInChildren<Collider>();
       _pitcher = FindObjectOfType<Pitcher>().gameObject;
+      _fielders = new List<Fielder>(FindObjectsOfType<Fielder>());
     }
 
     void OnCollisionEnter(Collision other)
@@ -32,6 +34,16 @@ namespace Test
         // バットを一時的に無効化（1.5秒後復活）
         _col.enabled = false;
         Invoke("EnableBat", 1.5f);
+
+        foreach (var f in _fielders)
+        {
+          ExecuteEvents.Execute<IFielderMessageHandler>(
+            target: f.gameObject,
+            eventData: null,
+            functor: (receiver, eventData) => receiver.EnableFielderMove()
+          );
+        }
+
       }
     }
 
