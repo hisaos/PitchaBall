@@ -26,8 +26,7 @@ namespace Test
     void FixedUpdate()
     {
       // ボールを追っかけさせる
-      if (!_chaseBall) return;
-      if (!_ball) return;
+      if (!(_ball && _chaseBall)) return;
 
       var ballPos = _ball.transform.position;
       var pos = this.transform.position;
@@ -50,7 +49,7 @@ namespace Test
         foreach (var f in _fielders)
         {
           ExecuteEvents.Execute<IFielderMessageHandler>(
-            target: _pitcher,
+            target: f.gameObject,
             eventData: null,
             functor: (receiver, eventData) => {
               receiver.ResetFielderBall();
