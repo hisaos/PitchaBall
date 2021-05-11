@@ -14,6 +14,7 @@ namespace Test
 
     public float moveSpeed = 1f;
     private List<Fielder> _fielders;
+    public Vector3 originalPosition;
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +22,7 @@ namespace Test
       _pitcher = FindObjectOfType<Pitcher>().gameObject;
       _rb = this.gameObject.GetComponent<Rigidbody>();
       _fielders = new List<Fielder>(FindObjectsOfType<Fielder>());
+      originalPosition = this.transform.position;
     }
 
     void FixedUpdate()
@@ -46,6 +48,7 @@ namespace Test
           functor: (receiver, eventData) => receiver.EnablePitch()
         );
 
+        // ボールを取ったら追わずに元の位置へ
         foreach (var f in _fielders)
         {
           ExecuteEvents.Execute<IFielderMessageHandler>(
@@ -54,6 +57,7 @@ namespace Test
             functor: (receiver, eventData) => {
               receiver.ResetFielderBall();
               receiver.DisableFielderMove();
+              receiver.ReturnToOriginalPosition();
             }
           );
         }
@@ -90,6 +94,13 @@ namespace Test
       Debug.Log("DisableFielderMove");
       _rb.velocity = Vector3.zero;
       _chaseBall = false;
+    }
+
+    public void ReturnToOriginalPosition()
+    {
+      Debug.Log("Return");
+      _rb.velocity = Vector3.zero;
+      this.transform.position = originalPosition;
     }
   }
 }

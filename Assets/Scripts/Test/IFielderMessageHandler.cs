@@ -16,5 +16,8 @@ namespace Test
 
     // 追わなくなる時のメッセージハンドラ
     void DisableFielderMove();
+
+    // 元の位置に戻る
+    void ReturnToOriginalPosition();
   }
 }
