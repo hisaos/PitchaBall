@@ -16,6 +16,9 @@ namespace Test
     private List<Fielder> _fielders;
     public Vector3 originalPosition;
 
+    private float _distToBall;
+    private bool _minDistToBall;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,7 +35,24 @@ namespace Test
 
       var ballPos = _ball.transform.position;
       var pos = this.transform.position;
-      var moveDir = new Vector3(ballPos.x - pos.x, 0f, ballPos.z - pos.z).normalized;
+      var diffToBall = new Vector3(ballPos.x - pos.x, 0f, ballPos.z - pos.z);
+      _distToBall = diffToBall.magnitude;
+
+      // ボールを取ったら追わずに元の位置へ
+      foreach (var f in _fielders)
+      {
+        if (f.gameObject == this.gameObject) continue;
+        ExecuteEvents.Execute<IFielderMessageHandler>(
+          target: f.gameObject,
+          eventData: null,
+          functor: (receiver, eventData) =>
+          {
+            receiver.TellDistanceToBall(_distToBall);
+          }
+        );
+      }
+
+      var moveDir = diffToBall.normalized;
 
       _rb.AddForce(moveDir * moveSpeed, ForceMode.VelocityChange);
     }
@@ -54,7 +74,8 @@ namespace Test
           ExecuteEvents.Execute<IFielderMessageHandler>(
             target: f.gameObject,
             eventData: null,
-            functor: (receiver, eventData) => {
+            functor: (receiver, eventData) =>
+            {
               receiver.ResetFielderBall();
               receiver.DisableFielderMove();
               receiver.ReturnToOriginalPosition();
@@ -94,13 +115,22 @@ namespace Test
       Debug.Log("DisableFielderMove");
       _rb.velocity = Vector3.zero;
       _chaseBall = false;
+      _minDistToBall = false;
     }
 
+    // 元の位置に戻る時のメッセージハンドラ
     public void ReturnToOriginalPosition()
     {
       Debug.Log("Return");
       _rb.velocity = Vector3.zero;
       this.transform.position = originalPosition;
+    }
+
+    // ボールまでの距離を教え合うメッセージハンドラ
+    public void TellDistanceToBall(float dist)
+    {
+      if (dist > _distToBall) _minDistToBall = true;
+      else _minDistToBall = false;
     }
   }
 }

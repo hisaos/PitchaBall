@@ -19,5 +19,8 @@ namespace Test
 
     // 元の位置に戻る
     void ReturnToOriginalPosition();
+
+    // ボールまでの距離を教え合うメッセージハンドラ
+    void TellDistanceToBall(float f);
   }
 }
