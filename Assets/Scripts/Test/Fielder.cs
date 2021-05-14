@@ -17,7 +17,7 @@ namespace Test
     public Vector3 originalPosition;
 
     private float _distToBall;
-    private bool _minDistToBall;
+    private bool _isMinDistToBall;
 
     // Start is called before the first frame update
     void Start()
@@ -33,12 +33,13 @@ namespace Test
       // ボールを追っかけさせる
       if (!(_ball && _chaseBall)) return;
 
+      // ボールまでのx-z平面上の距離の計算
       var ballPos = _ball.transform.position;
       var pos = this.transform.position;
       var diffToBall = new Vector3(ballPos.x - pos.x, 0f, ballPos.z - pos.z);
       _distToBall = diffToBall.magnitude;
 
-      // ボールを取ったら追わずに元の位置へ
+      // 互いに距離を教え合う
       foreach (var f in _fielders)
       {
         if (f.gameObject == this.gameObject) continue;
@@ -52,8 +53,15 @@ namespace Test
         );
       }
 
-      var moveDir = diffToBall.normalized;
+      // もし一番ボールに近くなかったら止まる
+      if (!_isMinDistToBall)
+      {
+        _rb.velocity = Vector3.zero;
+        return;
+      }
 
+      // 動く方向ベクトルの計算、実際に動く
+      var moveDir = diffToBall.normalized;
       _rb.AddForce(moveDir * moveSpeed, ForceMode.VelocityChange);
     }
 
@@ -115,7 +123,7 @@ namespace Test
       Debug.Log("DisableFielderMove");
       _rb.velocity = Vector3.zero;
       _chaseBall = false;
-      _minDistToBall = false;
+      _isMinDistToBall = false;
     }
 
     // 元の位置に戻る時のメッセージハンドラ
@@ -129,8 +137,8 @@ namespace Test
     // ボールまでの距離を教え合うメッセージハンドラ
     public void TellDistanceToBall(float dist)
     {
-      if (dist > _distToBall) _minDistToBall = true;
-      else _minDistToBall = false;
+      if (dist > _distToBall) _isMinDistToBall = true;
+      else _isMinDistToBall = false;
     }
   }
 }
