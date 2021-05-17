@@ -12,7 +12,7 @@ namespace Test
     private bool _chaseBall;
     private Rigidbody _rb;
 
-    public float moveSpeed = 1f;
+    public float moveSpeed = 3f;
     private List<Fielder> _fielders;
     public Vector3 originalPosition;
 
@@ -36,8 +36,8 @@ namespace Test
       // ボールまでのx-z平面上の距離の計算
       var ballPos = _ball.transform.position;
       var pos = this.transform.position;
-      var diffToBall = new Vector3(ballPos.x - pos.x, 0f, ballPos.z - pos.z);
-      _distToBall = diffToBall.magnitude;
+      var distToBall = new Vector3(ballPos.x - pos.x, 0f, ballPos.z - pos.z);
+      _distToBall = distToBall.magnitude;
 
       // 互いに距離を教え合う
       foreach (var f in _fielders)
@@ -57,12 +57,15 @@ namespace Test
       if (!_isMinDistToBall)
       {
         _rb.velocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
         return;
       }
 
       // 動く方向ベクトルの計算、実際に動く
-      var moveDir = diffToBall.normalized;
-      _rb.AddForce(moveDir * moveSpeed, ForceMode.VelocityChange);
+      var moveDir = distToBall.normalized;
+      // velocityを直接変えて一定スピードで動くようにする
+      _rb.velocity = moveDir * moveSpeed;
+//      _rb.AddForce(moveDir * moveSpeed, ForceMode.VelocityChange);
     }
 
     void OnCollisionEnter(Collision other)
