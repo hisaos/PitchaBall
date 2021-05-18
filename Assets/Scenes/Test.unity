@@ -171,6 +171,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c191fe7f0fcc84d4da9fd34f74cf0be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ball: {fileID: 6048143019902189746, guid: 570c562adf8c57749af18b55230437eb, type: 3}
+  pitchUpForce: 0.4
+  pitchForwardForce: 0.8
   moveSpeed: 3
   originalPosition: {x: 0, y: 0, z: 0}
 --- !u!136 &101297642
@@ -855,6 +858,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c191fe7f0fcc84d4da9fd34f74cf0be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ball: {fileID: 6048143019902189746, guid: 570c562adf8c57749af18b55230437eb, type: 3}
+  pitchUpForce: 0.4
+  pitchForwardForce: 0.8
   moveSpeed: 3
   originalPosition: {x: 0, y: 0, z: 0}
 --- !u!54 &493795645
@@ -1273,6 +1279,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c191fe7f0fcc84d4da9fd34f74cf0be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ball: {fileID: 6048143019902189746, guid: 570c562adf8c57749af18b55230437eb, type: 3}
+  pitchUpForce: 0.4
+  pitchForwardForce: 0.8
   moveSpeed: 3
   originalPosition: {x: 0, y: 0, z: 0}
 --- !u!54 &819033829
@@ -1505,6 +1514,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c191fe7f0fcc84d4da9fd34f74cf0be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ball: {fileID: 6048143019902189746, guid: 570c562adf8c57749af18b55230437eb, type: 3}
+  pitchUpForce: 0.4
+  pitchForwardForce: 0.8
   moveSpeed: 3
   originalPosition: {x: 0, y: 0, z: 0}
 --- !u!54 &1095491676
@@ -1631,6 +1643,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c191fe7f0fcc84d4da9fd34f74cf0be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ball: {fileID: 6048143019902189746, guid: 570c562adf8c57749af18b55230437eb, type: 3}
+  pitchUpForce: 0.4
+  pitchForwardForce: 0.8
   moveSpeed: 3
   originalPosition: {x: 0, y: 0, z: 0}
 --- !u!54 &1152646733
@@ -1851,6 +1866,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c191fe7f0fcc84d4da9fd34f74cf0be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ball: {fileID: 6048143019902189746, guid: 570c562adf8c57749af18b55230437eb, type: 3}
+  pitchUpForce: 0.4
+  pitchForwardForce: 0.8
   moveSpeed: 3
   originalPosition: {x: 0, y: 0, z: 0}
 --- !u!54 &1326978693
