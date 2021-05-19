@@ -8,11 +8,13 @@ namespace Test
   public class Deadzone : MonoBehaviour
   {
     private GameObject _pitcher;
+    private List<Fielder> _fielders;
 
     // Start is called before the first frame update
     void Start()
     {
       _pitcher = FindObjectOfType<Pitcher>().gameObject;
+      _fielders = new List<Fielder>(FindObjectsOfType<Fielder>());
     }
 
     void OnTriggerEnter(Collider other)
@@ -27,6 +29,21 @@ namespace Test
             eventData: null,
             functor: (receiver, eventData) => receiver.EnablePitch()
         );
+
+        // ボールを取ったら追わずに元の位置へ
+        foreach (var f in _fielders)
+        {
+          ExecuteEvents.Execute<IFielderMessageHandler>(
+            target: f.gameObject,
+            eventData: null,
+            functor: (receiver, eventData) =>
+            {
+              receiver.ResetFielderBall();
+              receiver.DisableFielderMove();
+              receiver.ReturnToOriginalPosition();
+            }
+          );
+        }
 
         // ボールを消す（即時）->捕球
         Destroy(other.gameObject);

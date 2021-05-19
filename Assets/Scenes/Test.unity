@@ -1420,6 +1420,7 @@ GameObject:
   - component: {fileID: 1095491671}
   - component: {fileID: 1095491675}
   - component: {fileID: 1095491676}
+  - component: {fileID: 1095491677}
   m_Layer: 8
   m_Name: Catcher
   m_TagString: Untagged
@@ -1535,6 +1536,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 116
   m_CollisionDetection: 0
+--- !u!114 &1095491677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1095491670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 192c1757df6a80c4e96193fd80c6003f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1152646727
 GameObject:
   m_ObjectHideFlags: 0
@@ -2423,7 +2436,7 @@ MonoBehaviour:
   maxBatAngle: 90
   minBatAngle: -90
   power: 1
-  moveSpeed: 0.2
+  moveSpeed: 1
 --- !u!54 &1895981417
 Rigidbody:
   m_ObjectHideFlags: 0
