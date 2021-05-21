@@ -14,18 +14,18 @@ namespace Test
 
     void OnCollisionEnter(Collision other)
     {
-      if (other.gameObject.CompareTag("Ball"))
-      {
-        // ピッチャーを投げれる状態にする
-        ExecuteEvents.Execute<IPitcherMessageHandler>(
-            target: _pitcher,
-            eventData: null,
-            functor: (receiver, eventData) => receiver.EnablePitch()
-        );
+      // if (other.gameObject.CompareTag("Ball"))
+      // {
+      //   // ピッチャーを投げれる状態にする
+      //   ExecuteEvents.Execute<IPitcherMessageHandler>(
+      //       target: _pitcher,
+      //       eventData: null,
+      //       functor: (receiver, eventData) => receiver.EnablePitch()
+      //   );
 
-        // ボールを消す（1.5秒後）
-        Destroy(other.gameObject, 1.5f);
-      }
+      //   // ボールを消す（1.5秒後）
+      //   Destroy(other.gameObject, 1.5f);
+      // }
     }
   }
 }

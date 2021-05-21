@@ -120,6 +120,10 @@ namespace Test
           rb.AddForce(_directionToCatcher * pitchForwardForce + Vector3.up * pitchUpForce, ForceMode.Impulse);
           _pickBall = false;
         }
+      } 
+      else if (other.gameObject.CompareTag("Wall"))
+      {
+        _rb.velocity = Vector3.zero;
       }
     }
 
