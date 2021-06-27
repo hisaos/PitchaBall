@@ -28,6 +28,7 @@ namespace Test
         // ボールを飛ばす
         var r = other.gameObject.GetComponent<Rigidbody>();
         r.velocity = Vector3.zero;
+        r.useGravity = true;
         // otherとのコンタクト点よりボールの方が前にあるなら、ボール - コンタクト点の位置の向きに飛ばすと前に飛ぶ
         r.AddForce(((r.transform.position - other.GetContact(0).point).normalized + Vector3.up / 2f) * batterPower, ForceMode.Impulse);
 

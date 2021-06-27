@@ -38,7 +38,9 @@ namespace Test
         b.transform.localPosition = this.transform.position + Vector3.forward;
         _pitchInterval = pitchInterval;
         var rb = b.GetComponent<Rigidbody>();
-        rb.AddForce(Vector3.forward * pitchForwardForce + Vector3.up * pitchUpForce, ForceMode.Impulse);
+        rb.useGravity = false;
+        // rb.AddForce(Vector3.forward * pitchForwardForce + Vector3.up * pitchUpForce, ForceMode.Impulse);
+        rb.AddForce(Vector3.forward * pitchForwardForce, ForceMode.Impulse);
         _isPitched = true;
 
         foreach (var f in _fielders)
