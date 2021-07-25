@@ -25,6 +25,13 @@ namespace Test
         functor: (receiver, eventData) => receiver.EnablePitch()
       );
 
+      // カメラをMainCameraに切り替え
+      ExecuteEvents.Execute<ICameraManagerMessageHander>(
+        target: CameraManager.Instance,
+        eventData: null,
+        functor: (receiver, eventData) => receiver.SwitchCamera(true)
+      );
+
       // ボールを取ったら追わずに元の位置へ
       foreach (var f in _fielders)
       {

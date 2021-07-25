@@ -36,6 +36,13 @@ namespace Test
         _col.enabled = false;
         Invoke("EnableBat", 1.5f);
 
+        // カメラをFieldCameraに切り替え
+        ExecuteEvents.Execute<ICameraManagerMessageHander>(
+          target: CameraManager.Instance,
+          eventData: null,
+          functor: (receiver, eventData) => receiver.SwitchCamera(false)
+        );
+
         foreach (var f in _fielders)
         {
           ExecuteEvents.Execute<IFielderMessageHandler>(
