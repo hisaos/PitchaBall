@@ -29,7 +29,7 @@ namespace Test
       ExecuteEvents.Execute<ICameraManagerMessageHander>(
         target: CameraManager.Instance,
         eventData: null,
-        functor: (receiver, eventData) => receiver.SwitchCamera(true)
+        functor: (receiver, eventData) => receiver.SwitchCamera(true, null)
       );
 
       // ボールを取ったら追わずに元の位置へ
@@ -47,6 +47,5 @@ namespace Test
         );
       }
     }
-
   }
 }

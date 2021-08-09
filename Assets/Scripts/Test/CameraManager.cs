@@ -6,22 +6,26 @@ namespace Test
 {
   public class CameraManager : MonoBehaviour, ICameraManagerMessageHander
   {
-    public Camera mainCamera;
-    public Camera fieldCamera;
+    public Camera MainCamera;
+    public Camera FieldCamera;
+    private FieldCamera fieldCamera;
+
     public static GameObject Instance;
 
     void Start()
     {
       if (Instance == null) Instance = this.gameObject;
-      mainCamera.enabled = true;
-      fieldCamera.enabled = false;
+      MainCamera.enabled = true;
+      FieldCamera.enabled = false;
+      fieldCamera = FieldCamera.GetComponent<FieldCamera>();
     }
 
     // カメラを切り替えるメッセージハンドラ    
-    public void SwitchCamera(bool isMain)
+    public void SwitchCamera(bool isMain, Transform target)
     {
-      mainCamera.enabled = isMain;
-      fieldCamera.enabled = !isMain;
+      MainCamera.enabled = isMain;
+      FieldCamera.enabled = !isMain;
+      if (target) fieldCamera.ChaseTarget = target;
     }
   }
 }
