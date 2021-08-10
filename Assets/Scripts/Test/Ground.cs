@@ -18,7 +18,7 @@ namespace Test
         if (label.Equals("Score"))
         {
           BattingManager.Instance.SetJudgeText("はいった");
-          BattingManager.Instance.Score++;
+          BattingManager.Instance.CountScore();
         }
         if (label.Equals("Foul"))
         {
