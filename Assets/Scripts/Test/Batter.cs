@@ -7,7 +7,7 @@ namespace Test
 {
   public class Batter : MonoBehaviour, IBatterMessageHandler
   {
-    private InputActions _ia;
+    private InputActions inputActions;
     private bool isPlayer;
     public bool IsPlayer { get { return isPlayer; } set { isPlayer = value; } }
 
@@ -15,7 +15,7 @@ namespace Test
 
     private Vector2 stickVector;
 
-    private Rigidbody rb;
+    private Rigidbody playerRigidbody;
 
     public GameObject Bat;
     private GameObject bat;
@@ -29,12 +29,13 @@ namespace Test
     public float batSwingSpeed = 5f;
 
     // CPU制御用
+    private bool isCountingDownToSwing = false;
     private bool isSwingingBat = false;
-    private float timeToSwingBat = 2.7f;
+    private float timeToSwingBat;
     private float timeToKeepSwinging = -1f;
 
     public float power = 2f;
-    private Bat _batComponent;
+    private Bat batComponent;
 
     [SerializeField] private float moveSpeed;
 
@@ -42,28 +43,30 @@ namespace Test
     {
       isPlayer = true;
 
-      _ia = new InputActions();
-      rb = GetComponent<Rigidbody>();
+      inputActions = new InputActions();
+      playerRigidbody = GetComponent<Rigidbody>();
+
       // バットの配置
       pivot = this.transform.position;
       bat = Instantiate(Bat, pivot, Quaternion.identity);
       bat.transform.SetParent(this.transform);
       batSwingVector = -1f;
       batAngle = minBatAngle;
-      _batComponent = bat.GetComponentInChildren<Bat>();
+      batComponent = bat.GetComponentInChildren<Bat>();
+      timeToSwingBat = 0.7f + Random.Range(-0.1f, 0.1f);
 
-      _ia.Player.A.performed += (context) =>
+      inputActions.Player.A.performed += (context) =>
       {
         // _batAngleを増やしてバットを振る
         Debug.Log(this.name + ": A Press");
         if (isPlayer) batSwingVector = 1f;
       };
-      _ia.Player.A.canceled += (context) =>
+      inputActions.Player.A.canceled += (context) =>
       {
         Debug.Log(this.name + ": A Release");
         if (isPlayer) batSwingVector = -1f;
       };
-      _ia.Player.B.performed += (context) =>
+      inputActions.Player.B.performed += (context) =>
       {
         Debug.Log(this.name + ": B");
       };
@@ -71,24 +74,25 @@ namespace Test
 
     private void FixedUpdate()
     {
-      stickVector = _ia.Player.Move.ReadValue<Vector2>();
+      stickVector = inputActions.Player.Move.ReadValue<Vector2>();
       //Debug.Log("x:" + _stickVector.x + " y:" + _stickVector.y);
 
-      if (isPlayer) rb.velocity = new Vector3(-stickVector.x, 0f, -stickVector.y) * moveSpeed;
+      if (isPlayer) playerRigidbody.velocity = new Vector3(-stickVector.x, 0f, -stickVector.y) * moveSpeed;
       // _rb.AddForce(new Vector3(-_stickVector.x, 0f, -_stickVector.y) * moveSpeed, ForceMode.VelocityChange);
     }
 
     private void Update()
     {
-      _batComponent.batterPower = power;
+      batComponent.batterPower = power;
 
       // CPU制御用
       if (!isPlayer)
       {
         batSwingTime = 180f / batSwingSpeed;
 
-        timeToSwingBat -= Time.deltaTime;
-        timeToKeepSwinging -= Time.deltaTime;
+        if (isCountingDownToSwing) timeToSwingBat -= Time.deltaTime;
+        // Debug.Log("TimeToSwing: " + timeToSwingBat);
+        if (timeToKeepSwinging >= 0f) timeToKeepSwinging -= Time.deltaTime;
 
         if (timeToSwingBat <= 0f)
         {
@@ -111,24 +115,30 @@ namespace Test
 
     public void EnableBatter()
     {
-      Debug.Log(this.gameObject.name + "EnableBatter");
+      Debug.Log(this.gameObject.name + ": EnableBatter");
       this.transform.position = initialPosition;
       isPlayer = !isPlayer;
-      timeToSwingBat = 2.7f + Random.Range(-0.4f, 0.4f);
+      timeToSwingBat = 0.7f + Random.Range(-0.1f, 0.1f);
       timeToKeepSwinging = -1f;
+      isCountingDownToSwing = false;
       isSwingingBat = false;
       batAngle = minBatAngle;
       batSwingVector = -1f;
     }
 
+    public void NotifyBallThrown()
+    {
+      isCountingDownToSwing = true;
+    }
+
     private void OnEnable()
     {
-      _ia.Player.Enable();
+      inputActions.Player.Enable();
     }
 
     private void OnDisable()
     {
-      _ia.Player.Disable();
+      inputActions.Player.Disable();
     }
   }
 }
