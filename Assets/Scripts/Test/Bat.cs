@@ -9,18 +9,25 @@ namespace Test
   {
     public float batterPower { get; set; }
 
-    private Collider _col;
+    private Collider batCollider;
 
-    private GameObject _pitcher;
-    private List<Fielder> _fielders;
+    private GameObject pitcher;
+    private List<Fielder> fielders;
 
     private const float deg2rad = Mathf.PI / 180f;
+    private Transform sweetspot;
+    private Transform minDistanceContact; // スイートスポットとバットとのコンタクトが最短になる点
+    private float baseDistanceToSweetspot;
 
     void Start()
     {
-      _col = GetComponentInChildren<Collider>();
-      _pitcher = FindObjectOfType<Pitcher>().gameObject;
-      _fielders = new List<Fielder>(FindObjectsOfType<Fielder>());
+      batCollider = GetComponentInChildren<Collider>();
+      pitcher = FindObjectOfType<Pitcher>().gameObject;
+      fielders = new List<Fielder>(FindObjectsOfType<Fielder>());
+      sweetspot = transform.Find("sweetspot"); // sweetspot
+      minDistanceContact = transform.Find("minDistanceContact");  // minDistanceContact
+      baseDistanceToSweetspot = Vector3.Distance(sweetspot.localPosition, minDistanceContact.localPosition);
+      // Debug.Log("minDistanceToSweetspot: " + baseDistanceToSweetspot);
     }
 
     void OnCollisionEnter(Collision other)
@@ -28,42 +35,43 @@ namespace Test
       if (other.gameObject.CompareTag("Ball"))
       {
         // ボールを飛ばす
-        var r = other.gameObject.GetComponent<Rigidbody>();
-        var t = other.gameObject.transform;
-        var pt = this.transform.parent.transform;
-        r.velocity = Vector3.zero;
-        r.useGravity = true;
-        // otherとのコンタクト点よりボールの方が前にあるなら、ボール - コンタクト点の位置の向きに飛ばすと前に飛ぶ
-        // r.AddForce(((t.position - other.GetContact(0).point).normalized + Vector3.up / 2f) * batterPower, ForceMode.Impulse);
-        Debug.Log("Bat angle y:" + pt.localEulerAngles.y);
-        r.AddForce(new Vector3(-Mathf.Sin(pt.localEulerAngles.y * deg2rad), 1f, -Mathf.Cos(pt.localEulerAngles.y * deg2rad)) * batterPower, ForceMode.Impulse);
+        var ballRigidbody = other.gameObject.GetComponent<Rigidbody>();
+        var ballTransform = other.gameObject.transform;
+        var batPivotTransform = this.transform.parent.transform;
+        ballRigidbody.velocity = Vector3.zero;
+        ballRigidbody.useGravity = true;
 
         // バットを一時的に無効化（1.5秒後復活）
-        _col.enabled = false;
+        batCollider.enabled = false;
         Invoke("EnableBat", 1.5f);
+
+        // otherとのコンタクト点よりボールの方が前にあるなら、ボール - コンタクト点の位置の向きに飛ばすと前に飛ぶ
+        // sweetspotからの距離によってパワーと向きを変える
+        var dist = Vector3.Distance(ballTransform.position, sweetspot.position);
+        // Debug.Log("Distance to sweetspot: " + dist);
+        ballRigidbody.AddForce(new Vector3(-Mathf.Sin(batPivotTransform.localEulerAngles.y * deg2rad), 1f / (dist / baseDistanceToSweetspot), -Mathf.Cos(batPivotTransform.localEulerAngles.y * deg2rad)) * batterPower, ForceMode.Impulse);
 
         // カメラをFieldCameraに切り替え
         ExecuteEvents.Execute<ICameraManagerMessageHander>(
           target: CameraManager.Instance,
           eventData: null,
-          functor: (receiver, eventData) => receiver.SwitchCamera(false, t)
+          functor: (receiver, eventData) => receiver.SwitchCamera(false, ballTransform)
         );
 
-        foreach (var f in _fielders)
-        {
-          ExecuteEvents.Execute<IFielderMessageHandler>(
-            target: f.gameObject,
-            eventData: null,
-            functor: (receiver, eventData) => receiver.EnableFielderMove()
-          );
-        }
-
+        // foreach (var f in fielders)
+        // {
+        //   ExecuteEvents.Execute<IFielderMessageHandler>(
+        //     target: f.gameObject,
+        //     eventData: null,
+        //     functor: (receiver, eventData) => receiver.EnableFielderMove()
+        //   );
+        // }
       }
     }
 
     void EnableBat()
     {
-      _col.enabled = true;
+      batCollider.enabled = true;
     }
   }
 }

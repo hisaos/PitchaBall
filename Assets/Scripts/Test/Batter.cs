@@ -57,18 +57,16 @@ namespace Test
 
       inputActions.Player.A.performed += (context) =>
       {
-        // _batAngleを増やしてバットを振る
-        Debug.Log(this.name + ": A Press");
+        // batAngleを増やしてバットを振る
         if (isPlayer) batSwingVector = 1f;
       };
       inputActions.Player.A.canceled += (context) =>
       {
-        Debug.Log(this.name + ": A Release");
+        // batAngleを減らしてバットを戻す
         if (isPlayer) batSwingVector = -1f;
       };
       inputActions.Player.B.performed += (context) =>
       {
-        Debug.Log(this.name + ": B");
       };
     }
 
@@ -110,12 +108,16 @@ namespace Test
       batAngle += batSwingVector * batSwingSpeed;
       if (batAngle > maxBatAngle) batAngle = maxBatAngle;
       else if (batAngle < minBatAngle) batAngle = minBatAngle;
+
+      // Pitcherが投げた後にバットがスイングしてるか判定
+      if (BattingManager.Instance.IsPitched && batAngle > 0f) BattingManager.Instance.IsBatSwung = true;
+
       bat.transform.rotation = Quaternion.Euler(0f, batAngle, 0f);
     }
 
     public void EnableBatter()
     {
-      Debug.Log(this.gameObject.name + ": EnableBatter");
+      // Debug.Log(this.gameObject.name + ": EnableBatter");
       this.transform.position = initialPosition;
       isPlayer = !isPlayer;
       timeToSwingBat = 0.7f + Random.Range(-0.1f, 0.1f);
@@ -129,6 +131,18 @@ namespace Test
     public void NotifyBallThrown()
     {
       isCountingDownToSwing = true;
+    }
+
+    void OnCollisionEnter(Collision other)
+    {
+      BattingManager.Instance.IsBallBounded = true;
+      if (other.gameObject.CompareTag("Ball"))
+      {
+        // デッドボールは1点（無慈悲）
+        BattingManager.Instance.SetJudgeText("デッドボール");
+        BattingManager.Instance.CountScore();
+        Destroy(other.gameObject);
+      }
     }
 
     private void OnEnable()

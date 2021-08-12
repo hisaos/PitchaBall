@@ -8,6 +8,7 @@ namespace Test
   {
     void OnCollisionEnter(Collision other)
     {
+      BattingManager.Instance.IsBallBounded = true;
       if (other.gameObject.CompareTag("Ball"))
       {
         var label = this.gameObject.tag;
@@ -27,6 +28,11 @@ namespace Test
         if (label.Equals("Strike"))
         {
           BattingManager.Instance.SetJudgeText("ストライク");
+        }
+        if (label.Equals("Far"))
+        {
+          if (BattingManager.Instance.IsBatSwung) BattingManager.Instance.SetJudgeText("ストライク");
+          else BattingManager.Instance.SetJudgeText("ボール");
         }
         Destroy(other.gameObject);
       }

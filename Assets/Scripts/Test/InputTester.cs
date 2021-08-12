@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Test
 
 {
-  public class Test : MonoBehaviour
+  public class InputTester : MonoBehaviour
   {
     private InputActions _ia;
     private Vector2 _stickVector;

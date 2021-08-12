@@ -10,9 +10,12 @@ namespace Test
   {
     public static BattingManager Instance;
 
+    // 判定UI
+    public Text JudgeText;
+
     // 残り球数
     private int remain;
-    public int Remain { get; set; }
+    public int Remain { get { return remain; } set { remain = value; } }
     public Text RemainText;
 
     // 1Pスコア
@@ -25,11 +28,17 @@ namespace Test
     public int Score1 { get { return score1; } set { score1 = value; } }
     public Text ScoreText1;
 
-    // 判定UI
-    public Text JudgeText;
+    // Ballが地面にバウンドしたフラグ
+    private bool isBallBounded;
+    public bool IsBallBounded { get { return isBallBounded; } set { isBallBounded = value; } }
 
-    private bool isBallHit;
-    public bool IsBallHit { get; set; }
+    // Batterがバットを振ったフラグ
+    private bool isBatSwung;
+    public bool IsBatSwung { get { return isBatSwung; } set { isBatSwung = value; } }
+
+    // Pitcherが投げたフラグ
+    private bool isPitched;
+    public bool IsPitched { get { return isPitched; } set { isPitched = value; } }
 
     private GameObject pitcher;
     private GameObject batter;
@@ -42,10 +51,15 @@ namespace Test
     {
       if (Instance == null) Instance = this;
       isTop = true;
+      isPitched = false;
+      isBatSwung = false;
+      isBallBounded = false;
+
       remain = 10;
       score0 = 0;
       score1 = 0;
       JudgeText.enabled = false;
+      
       pitcher = FindObjectOfType<Pitcher>().gameObject;
       batter = FindObjectOfType<Batter>().gameObject;
 
@@ -66,7 +80,7 @@ namespace Test
       JudgeText.text = judge;
       JudgeText.enabled = true;
 
-      Invoke(nameof(ResumeToStart), 3f);
+      if (!IsInvoking(nameof(ResumeToStart))) Invoke(nameof(ResumeToStart), 3f);
     }
 
     public void CountScore()
@@ -120,6 +134,15 @@ namespace Test
           eventData: null,
           functor: (receiver, eventData) => receiver.SwitchCamera(true, null)
         );
+
+        // ボールのバウンド判定をリセット
+        isBallBounded = false;
+
+        // バットのスイング判定をリセット
+        isBatSwung = false;
+
+        // ピッチャーの投げた判定をリセット
+        isPitched = false;
       }
     }
 

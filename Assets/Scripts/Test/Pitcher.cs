@@ -34,7 +34,7 @@ namespace Test
 
       inputActions.Player.A.performed += (context) =>
       {
-        Debug.Log(this.name + ": A Press");
+        // Debug.Log(this.name + ": A Press");
         if (isPlayer && !isPitched) ExecutePitch();
       };
     }
@@ -108,11 +108,12 @@ namespace Test
         else if (d1 == -1) ballWindingVector = -0.3f;
         else ballWindingVector = 0f;
 
-        Debug.Log("Ball pattern: " + d0.ToString() + "," + d1.ToString());
+        // Debug.Log("Ball pattern: " + d0.ToString() + "," + d1.ToString());
       }
 
       thrownBallRigidbody.AddForce(Vector3.forward * pf, ForceMode.Impulse);
       isPitched = true;
+      BattingManager.Instance.IsPitched = true;
 
       ExecuteEvents.Execute<IBatterMessageHandler>(
         target: batter.gameObject,
@@ -120,19 +121,19 @@ namespace Test
         functor: (receiver, eventData) => receiver.NotifyBallThrown()
       );
 
-      foreach (var f in fielders)
-      {
-        ExecuteEvents.Execute<IFielderMessageHandler>(
-          target: f.gameObject,
-          eventData: null,
-          functor: (receiver, eventData) => receiver.SetFielderBall(b)
-        );
-      }
+      // foreach (var f in fielders)
+      // {
+      //   ExecuteEvents.Execute<IFielderMessageHandler>(
+      //     target: f.gameObject,
+      //     eventData: null,
+      //     functor: (receiver, eventData) => receiver.SetFielderBall(b)
+      //   );
+      // }
     }
 
     public void EnablePitch()
     {
-      Debug.Log(this.gameObject.name + ": EnablePitch");
+      // Debug.Log(this.gameObject.name + ": EnablePitch");
       isPlayer = !isPlayer;
       isPitched = false;
     }
