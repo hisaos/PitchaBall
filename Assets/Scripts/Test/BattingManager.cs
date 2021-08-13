@@ -28,6 +28,11 @@ namespace Test
     public int Score1 { get { return score1; } set { score1 = value; } }
     public Text ScoreText1;
 
+    // カウント
+    private int outCount;
+    public int OutCount { get { return outCount; } set { outCount = value; } }
+    public Text OutCountText;
+
     // Ballが地面にバウンドしたフラグ
     private bool isBallBounded;
     public bool IsBallBounded { get { return isBallBounded; } set { isBallBounded = value; } }
@@ -42,9 +47,18 @@ namespace Test
 
     private GameObject pitcher;
     private GameObject batter;
+    private List<Fielder> fielders;
+
+    public GameObject runnerPrefab;
 
     // 1Pの手番か2Pの手番か
     private bool isTop;
+    public bool IsTop { get { return isTop; } set { isTop = value; } }
+
+    // 塁
+    public Transform[] bases = new Transform[4];
+    private int baseCount;
+    public int BaseCount { get { return baseCount; } set { baseCount = value; } }
 
     // Start is called before the first frame update
     void Start()
@@ -58,10 +72,13 @@ namespace Test
       remain = 10;
       score0 = 0;
       score1 = 0;
+      outCount = 0;
+      baseCount = 0;
       JudgeText.enabled = false;
-      
+
       pitcher = FindObjectOfType<Pitcher>().gameObject;
       batter = FindObjectOfType<Batter>().gameObject;
+      fielders = new List<Fielder>(FindObjectsOfType<Fielder>());
 
       ScoreText0.color = Color.red;
       ScoreText1.color = Color.white;
@@ -80,6 +97,7 @@ namespace Test
       JudgeText.text = judge;
       JudgeText.enabled = true;
 
+      if (outCount >= 3) ProceedInning();
       if (!IsInvoking(nameof(ResumeToStart))) Invoke(nameof(ResumeToStart), 3f);
     }
 
@@ -88,11 +106,20 @@ namespace Test
       if (isTop) score0++;
       else score1++;
     }
-    // ボールが接地して判定を表示した後に呼ばれて初期状態に戻す
-    void ResumeToStart()
+
+    // 回を進める処理
+    void ProceedInning()
     {
+      // アウトカウントリセット
+      outCount = 0;
+
+      // ベースクリア
+      baseCount = 0;
+
+      // 裏なら残りを減らす
       if (!isTop) remain--;
 
+      // 残り回数0になったら終了
       if (remain <= 0)
       {
         JudgeText.text = "終了";
@@ -113,36 +140,86 @@ namespace Test
           StartCoroutine(ShowWhoIsAtBat("1Pのこうげき"));
         }
         isTop = !isTop;
+      }
+    }
 
-        // ピッチャーを投げれる状態にする
-        ExecuteEvents.Execute<IPitcherMessageHandler>(
-          target: pitcher,
+    // ボールが接地して判定を表示した後に呼ばれて初期状態に戻す
+    void ResumeToStart()
+    {
+      // 判定をけす
+      JudgeText.enabled = false;
+
+      // カウント表示更新
+      OutCountText.text = "アウト：" + outCount.ToString();
+
+      // ベース上の走者表示更新
+      var runners = FindObjectsOfType<Runner>();
+      foreach (var r in runners) Destroy(r.gameObject);
+      for (int i = 0; i < baseCount; i++) Instantiate(runnerPrefab, bases[i].position + Vector3.up, Quaternion.identity);
+
+      // ボールを片づける
+      Destroy(GameObject.FindGameObjectWithTag("Ball"));
+
+      // ピッチャーを投げれる状態にする
+      ExecuteEvents.Execute<IPitcherMessageHandler>(
+        target: pitcher,
+        eventData: null,
+        functor: (receiver, eventData) => receiver.EnablePitch()
+      );
+
+      // バッターをリフレッシュ
+      ExecuteEvents.Execute<IBatterMessageHandler>(
+        target: batter,
+        eventData: null,
+        functor: (receiver, eventData) => receiver.EnableBatter()
+      );
+
+      // カメラをMainCameraに切り替え
+      ExecuteEvents.Execute<ICameraManagerMessageHander>(
+        target: CameraManager.Instance,
+        eventData: null,
+        functor: (receiver, eventData) => receiver.SwitchCamera(true, null)
+      );
+
+      // ボールのバウンド判定をリセット
+      isBallBounded = false;
+
+      // バットのスイング判定をリセット
+      isBatSwung = false;
+
+      // ピッチャーの投げた判定をリセット
+      isPitched = false;
+
+      // 野手の位置を元に戻して動かなくする
+      foreach (var f in fielders)
+      {
+        ExecuteEvents.Execute<IFielderMessageHandler>(
+          target: f.gameObject,
           eventData: null,
-          functor: (receiver, eventData) => receiver.EnablePitch()
+          functor: (receiver, eventData) =>
+          {
+            receiver.DisableFielderMove();
+            receiver.ReturnToOriginalPosition();
+          }
         );
+      }
 
-        // バッターをリフレッシュ
-        ExecuteEvents.Execute<IBatterMessageHandler>(
-          target: batter,
-          eventData: null,
-          functor: (receiver, eventData) => receiver.EnableBatter()
-        );
+    }
 
-        // カメラをMainCameraに切り替え
-        ExecuteEvents.Execute<ICameraManagerMessageHander>(
-          target: CameraManager.Instance,
-          eventData: null,
-          functor: (receiver, eventData) => receiver.SwitchCamera(true, null)
-        );
+    public void CountOut()
+    {
+      outCount++;
+    }
 
-        // ボールのバウンド判定をリセット
-        isBallBounded = false;
+    public void CountBase()
+    {
+      baseCount++;
 
-        // バットのスイング判定をリセット
-        isBatSwung = false;
-
-        // ピッチャーの投げた判定をリセット
-        isPitched = false;
+      // 4以上になってるなら1点入れて3に戻す
+      if (baseCount >= 4)
+      {
+        CountScore();
+        baseCount = 3;
       }
     }
 

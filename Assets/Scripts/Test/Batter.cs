@@ -72,15 +72,13 @@ namespace Test
 
     private void FixedUpdate()
     {
-      stickVector = inputActions.Player.Move.ReadValue<Vector2>();
-      //Debug.Log("x:" + _stickVector.x + " y:" + _stickVector.y);
-
       if (isPlayer) playerRigidbody.velocity = new Vector3(-stickVector.x, 0f, -stickVector.y) * moveSpeed;
-      // _rb.AddForce(new Vector3(-_stickVector.x, 0f, -_stickVector.y) * moveSpeed, ForceMode.VelocityChange);
     }
 
     private void Update()
     {
+      stickVector = inputActions.Player.Move.ReadValue<Vector2>();
+
       batComponent.batterPower = power;
 
       // CPU制御用
@@ -119,7 +117,7 @@ namespace Test
     {
       // Debug.Log(this.gameObject.name + ": EnableBatter");
       this.transform.position = initialPosition;
-      isPlayer = !isPlayer;
+      isPlayer = BattingManager.Instance.IsTop;
       timeToSwingBat = 0.7f + Random.Range(-0.1f, 0.1f);
       timeToKeepSwinging = -1f;
       isCountingDownToSwing = false;
@@ -135,9 +133,14 @@ namespace Test
 
     void OnCollisionEnter(Collision other)
     {
-      BattingManager.Instance.IsBallBounded = true;
       if (other.gameObject.CompareTag("Ball"))
       {
+        // 判定済みなら何もしない
+        if (BattingManager.Instance.IsBallBounded) return;
+
+        // バウンド判定つける
+        BattingManager.Instance.IsBallBounded = true;
+
         // デッドボールは1点（無慈悲）
         BattingManager.Instance.SetJudgeText("デッドボール");
         BattingManager.Instance.CountScore();

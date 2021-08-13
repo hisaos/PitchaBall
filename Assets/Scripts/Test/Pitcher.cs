@@ -134,7 +134,7 @@ namespace Test
     public void EnablePitch()
     {
       // Debug.Log(this.gameObject.name + ": EnablePitch");
-      isPlayer = !isPlayer;
+      isPlayer = !BattingManager.Instance.IsTop;
       isPitched = false;
     }
 

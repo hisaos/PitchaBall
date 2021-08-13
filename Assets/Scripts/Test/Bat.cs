@@ -58,14 +58,14 @@ namespace Test
           functor: (receiver, eventData) => receiver.SwitchCamera(false, ballTransform)
         );
 
-        // foreach (var f in fielders)
-        // {
-        //   ExecuteEvents.Execute<IFielderMessageHandler>(
-        //     target: f.gameObject,
-        //     eventData: null,
-        //     functor: (receiver, eventData) => receiver.EnableFielderMove()
-        //   );
-        // }
+        foreach (var f in fielders)
+        {
+          ExecuteEvents.Execute<IFielderMessageHandler>(
+            target: f.gameObject,
+            eventData: null,
+            functor: (receiver, eventData) => receiver.EnableFielderMove()
+          );
+        }
       }
     }
 
