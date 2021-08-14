@@ -6,7 +6,7 @@ namespace Test
   {
     private Transform chaseTarget;
     public Transform ChaseTarget { get { return chaseTarget; } set { chaseTarget = value; } }
-    public Vector3 offset;
+    public float cameraHeight;
 
     private Vector3 cameraAngle;
 
@@ -19,8 +19,8 @@ namespace Test
     {
       if (!chaseTarget) return;
 
-      this.transform.position = chaseTarget.position + offset;
-      this.transform.LookAt(chaseTarget);
+      this.transform.position = new Vector3(chaseTarget.position.x, cameraHeight, chaseTarget.position.z);
+      // this.transform.LookAt(chaseTarget);
       this.transform.localEulerAngles = cameraAngle;
     }
   }

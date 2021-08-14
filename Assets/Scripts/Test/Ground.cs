@@ -20,28 +20,41 @@ namespace Test
         if (label.Equals("Fair"))
         {
           BattingManager.Instance.SetJudgeText("ヒット");
+          BattingManager.Instance.ResetCount();
           BattingManager.Instance.CountBase();
         }
         if (label.Equals("Score"))
         {
           BattingManager.Instance.SetJudgeText("はいった");
+          BattingManager.Instance.ResetCount();
           BattingManager.Instance.CountBase();
-          for (int i = 0; i < BattingManager.Instance.BaseCount; i ++) BattingManager.Instance.CountScore();
+          for (int i = 0; i < BattingManager.Instance.BaseCount; i++) BattingManager.Instance.CountScore();
           BattingManager.Instance.BaseCount = 0;
         }
         if (label.Equals("Foul"))
         {
           BattingManager.Instance.SetJudgeText("ファール");
+          BattingManager.Instance.CountStrike(true);
         }
         if (label.Equals("Strike"))
         {
           BattingManager.Instance.SetJudgeText("ストライク");
+          BattingManager.Instance.CountStrike(false);
           Destroy(other.gameObject);
         }
         if (label.Equals("Far"))
         {
-          if (BattingManager.Instance.IsBatSwung) BattingManager.Instance.SetJudgeText("ストライク");
-          else BattingManager.Instance.SetJudgeText("ボール");
+          if (BattingManager.Instance.IsBatSwung)
+          {
+            BattingManager.Instance.SetJudgeText("ストライク");
+            BattingManager.Instance.CountStrike(false);
+          }
+          else
+          {
+            BattingManager.Instance.SetJudgeText("ボール");
+            BattingManager.Instance.CountBall();
+          }
+
           Destroy(other.gameObject);
         }
       }

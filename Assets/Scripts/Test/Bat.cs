@@ -63,7 +63,10 @@ namespace Test
           ExecuteEvents.Execute<IFielderMessageHandler>(
             target: f.gameObject,
             eventData: null,
-            functor: (receiver, eventData) => receiver.EnableFielderMove()
+            functor: (receiver, eventData) => {
+              receiver.EnableFielderMove();
+              receiver.SetFielderBall(other.gameObject);
+            }
           );
         }
       }

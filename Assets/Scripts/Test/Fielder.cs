@@ -11,6 +11,7 @@ namespace Test
     public float moveSpeed = 1f;
     public bool isPlayer;
     public bool isMoving;
+    private GameObject targetBall;
 
     // 守備位置番号(1-9)
     public int fielderPositionNumber;
@@ -20,20 +21,20 @@ namespace Test
 
     void Awake()
     {
-      isPlayer = true;
+      isPlayer = false;
       isMoving = false;
       inputActions = new InputActions();
       fielderRigidbody = GetComponent<Rigidbody>();
       fielderPositionVector = new List<Vector3>{
         new Vector3(0f, 1f, 0f),
-        new Vector3(0f, 1f, 8f),
-        new Vector3(-6f, 1f, 0f),
-        new Vector3(0f, 1f, -1f),
-        new Vector3(6f, 1f, 0f),
-        new Vector3(3f, 1f, -0.5f),
-        new Vector3(6f, 1f, -2f),
-        new Vector3(0f, 1f, -4f),
-        new Vector3(-6f, 1f, -2f),
+        new Vector3(0f, 1f, 9f),
+        new Vector3(-6f, 1f, -3f),
+        new Vector3(-3f, 1f, -6f),
+        new Vector3(6f, 1f, -3f),
+        new Vector3(3f, 1f, -6f),
+        new Vector3(10f, 1f, -12f),
+        new Vector3(0f, 1f, -16f),
+        new Vector3(-10f, 1f, -12f),
       };
     }
 
@@ -44,7 +45,18 @@ namespace Test
 
     void FixedUpdate()
     {
-      if (isMoving && isPlayer) fielderRigidbody.velocity = new Vector3(-stickVector.x, 0f, -stickVector.y) * moveSpeed;
+      if (isMoving)
+      {
+        if (isPlayer) fielderRigidbody.velocity = new Vector3(-stickVector.x, 0f, -stickVector.y) * moveSpeed;
+        else
+        {
+          if (targetBall)
+          {
+            var direction = (targetBall.transform.position - transform.position).normalized;
+            fielderRigidbody.velocity = new Vector3(direction.x, 0f, direction.z) * moveSpeed;
+          }
+        }
+      }
     }
 
     void OnCollisionEnter(Collision other)
@@ -75,16 +87,22 @@ namespace Test
     }
 
     // ボールが投げられた時のメッセージハンドラ
-    public void SetFielderBall(GameObject g) {}
+    public void SetFielderBall(GameObject g)
+    {
+      targetBall = g;
+    }
+
+    // ボールが消えた時のメッセージハンドラ
+    public void ResetFielderBall()
+    {
+      targetBall = null;
+    }
 
     // ボールが打たれた時のメッセージハンドラ
     public void EnableFielderMove()
     {
       isMoving = true;
     }
-
-    // ボールが消えた時のメッセージハンドラ
-    public void ResetFielderBall() {}
 
     // 追わなくなる時のメッセージハンドラ
     public void DisableFielderMove()
@@ -95,10 +113,15 @@ namespace Test
     // 元の位置に戻る
     public void ReturnToOriginalPosition()
     {
+      // 攻撃している側に応じてisPlayerを切り替える
+      isPlayer = !BattingManager.Instance.IsTop;
+
+      // velocityも0にしておく
+      fielderRigidbody.velocity = Vector3.zero;
       transform.position = fielderPositionVector[fielderPositionNumber - 1];
     }
 
     // ボールまでの距離を教え合うメッセージハンドラ
-    public void TellDistanceToBall(float f) {}
+    public void TellDistanceToBall(float f) { }
   }
 }

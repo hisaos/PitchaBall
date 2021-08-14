@@ -29,6 +29,12 @@ namespace Test
     public Text ScoreText1;
 
     // カウント
+    private int ballCount;
+    public int BallCount { get { return ballCount; } set { ballCount = value; } }
+    public Text BallCountText;
+    private int strikeCount;
+    public int StrikeCount { get { return strikeCount; } set { strikeCount = value; } }
+    public Text StrikeCountText;
     private int outCount;
     public int OutCount { get { return outCount; } set { outCount = value; } }
     public Text OutCountText;
@@ -150,6 +156,8 @@ namespace Test
       JudgeText.enabled = false;
 
       // カウント表示更新
+      BallCountText.text = "ボール：" + ballCount.ToString();
+      StrikeCountText.text = "ストラ：" + strikeCount.ToString();
       OutCountText.text = "アウト：" + outCount.ToString();
 
       // ベース上の走者表示更新
@@ -206,8 +214,43 @@ namespace Test
 
     }
 
+    public void CountStrike(bool isFoul)
+    {
+      strikeCount++;
+      if (strikeCount >= 3)
+      {
+        if (isFoul)
+        {
+          strikeCount = 2;
+        }
+        else
+        {
+          CountOut();
+          SetJudgeText("アウト");
+        }
+      }
+    }
+
+    public void CountBall()
+    {
+      ballCount++;
+      if (ballCount >= 4)
+      {
+        CountBase();
+        ResetCount();
+        SetJudgeText("フォアボール");
+      }
+    }
+
+    public void ResetCount()
+    {
+      strikeCount = 0;
+      ballCount = 0;
+    }
+
     public void CountOut()
     {
+      ResetCount();
       outCount++;
     }
 

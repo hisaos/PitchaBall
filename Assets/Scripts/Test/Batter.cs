@@ -141,9 +141,10 @@ namespace Test
         // バウンド判定つける
         BattingManager.Instance.IsBallBounded = true;
 
-        // デッドボールは1点（無慈悲）
+        // デッドボールはランナーを出す
         BattingManager.Instance.SetJudgeText("デッドボール");
-        BattingManager.Instance.CountScore();
+        BattingManager.Instance.ResetCount();
+        BattingManager.Instance.CountBase();
         Destroy(other.gameObject);
       }
     }
