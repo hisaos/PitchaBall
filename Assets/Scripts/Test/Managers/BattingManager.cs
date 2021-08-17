@@ -55,23 +55,18 @@ namespace Test
     private GameObject batter;
     private List<Fielder> fielders;
 
-    // public GameObject runnerPrefab;
-
     // 1Pの手番か2Pの手番か
     private bool isTop;
     public bool IsTop { get { return isTop; } set { isTop = value; } }
 
     // 塁
     public Transform[] bases = new Transform[4];
-    // private int baseCount;
-    // public int BaseCount { get { return baseCount; } set { baseCount = value; } }
 
-    // Start is called before the first frame update
     void Start()
     {
       if (Instance == null) Instance = this;
 
-      isTop = false;
+      isTop = true;
       isPitched = false;
       isBatSwung = false;
       isBallBounded = false;
@@ -80,7 +75,6 @@ namespace Test
       score0 = 0;
       score1 = 0;
       outCount = 0;
-      // baseCount = 0;
       JudgeText.enabled = false;
 
       pitcher = FindObjectOfType<Pitcher>().gameObject;
@@ -120,9 +114,6 @@ namespace Test
       // アウトカウントリセット
       outCount = 0;
 
-      // ベースクリア
-      // baseCount = 0;
-
       // 裏なら残りを減らす
       if (!isTop) remain--;
 
@@ -161,10 +152,8 @@ namespace Test
       StrikeCountText.text = "ストラ：" + strikeCount.ToString();
       OutCountText.text = "アウト：" + outCount.ToString();
 
-      // ベース上の走者表示更新
-      // var runners = FindObjectsOfType<Runner>();
-      // foreach (var r in runners) Destroy(r.gameObject);
-      // for (int i = 0; i < baseCount; i++) Instantiate(runnerPrefab, bases[i].position + Vector3.up, Quaternion.identity);
+      // ランナーの状態を更新
+      RunnerManager.Instance.UpdateRunners();
 
       // ボールを片づける
       Destroy(GameObject.FindGameObjectWithTag("Ball"));
@@ -256,18 +245,6 @@ namespace Test
       ResetCount();
       outCount++;
     }
-
-    // public void CountBase()
-    // {
-    //   baseCount++;
-
-    //   // 4以上になってるなら1点入れて3に戻す
-    //   if (baseCount >= 4)
-    //   {
-    //     CountScore();
-    //     baseCount = 3;
-    //   }
-    // }
 
     IEnumerator ShowWhoIsAtBat(string text)
     {

@@ -74,6 +74,17 @@ namespace Test
           );
         }
 
+        // 既存のランナーを走らせる
+        var runners = FindObjectsOfType<Runner>();
+        foreach (var r in runners)
+        {
+          ExecuteEvents.Execute<IRunnerMessageHandler>(
+            target: r.gameObject,
+            eventData: null,
+            functor: (receiver, eventData) => receiver.ProceedBase(3)
+          );
+        }
+
         // バッターランナーを出す
         RunnerManager.Instance.InstantiateRunner();
       }

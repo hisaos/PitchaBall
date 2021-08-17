@@ -36,7 +36,6 @@ namespace Test
     {
       distinationBase = 0;
       startingBase = -1;
-
       parkingBase = -1;
       forceOutBaseNumber = -1;
       touchupOutBaseNumber = -1;
@@ -51,17 +50,18 @@ namespace Test
     {
       var dist = BattingManager.Instance.bases[distinationBase].position - transform.position;
       var dist2d = new Vector3(dist.x, 0f, dist.z);
-      if (dist.sqrMagnitude >= minRunningDistance)
+      if (dist2d.sqrMagnitude >= minRunningDistance)
       {
-        runnerRigidbody.velocity = (dist.normalized * runningSpeed);
+        runnerRigidbody.velocity = (dist2d.normalized * runningSpeed);
       }
       else
       {
-        transform.position = BattingManager.Instance.bases[distinationBase].position;
+        Debug.Log("Reach: " + distinationBase);
+        transform.position = BattingManager.Instance.bases[distinationBase].position + Vector3.up;
         runnerRigidbody.velocity = Vector3.zero;
         parkingBase = distinationBase;
+        Debug.Log("Now Parking: " + parkingBase);
 
-        distinationBase = -1;
         if (parkingBase >= 3) HomeIn();
       }
     }
@@ -126,6 +126,7 @@ namespace Test
     // ランナーの状態をリセット
     public void ResetAtBat()
     {
+      Debug.Log("Starting: " + startingBase + ", Parking: " + parkingBase);
       // 塁の上にいてリセットを受けるならバッターで無くなる
       isBatter = false;
       startingBase = parkingBase;
