@@ -30,7 +30,6 @@ namespace Test
 
     // CPU制御用
     private bool isCountingDownToSwing = false;
-    private bool isSwingingBat = false;
     private float timeToSwingBat;
     private float timeToKeepSwinging = -1f;
 
@@ -92,7 +91,6 @@ namespace Test
 
         if (timeToSwingBat <= 0f)
         {
-          isSwingingBat = true;
           timeToKeepSwinging = batSwingTime;
         }
         batSwingVector = timeToKeepSwinging >= 0f ? 1f : -1f;
@@ -121,7 +119,6 @@ namespace Test
       timeToSwingBat = 0.7f + Random.Range(-0.1f, 0.1f);
       timeToKeepSwinging = -1f;
       isCountingDownToSwing = false;
-      isSwingingBat = false;
       batAngle = minBatAngle;
       batSwingVector = -1f;
     }
@@ -146,7 +143,8 @@ namespace Test
         BattingManager.Instance.ResetCount();
         RunnerManager.Instance.InstantiateRunner();
         RunnerManager.Instance.ProceedAllRunners();
-        // BattingManager.Instance.CountBase();
+        RunnerManager.Instance.NotifyRunnersFair();
+
         Destroy(other.gameObject);
       }
     }

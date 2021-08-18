@@ -21,15 +21,13 @@ namespace Test
         {
           BattingManager.Instance.SetJudgeText("ヒット");
           BattingManager.Instance.ResetCount();
-          // BattingManager.Instance.CountBase();
+          RunnerManager.Instance.NotifyRunnersFair();
         }
         if (label.Equals("Score"))
         {
           BattingManager.Instance.SetJudgeText("はいった");
           BattingManager.Instance.ResetCount();
-          // BattingManager.Instance.CountBase();
-          // for (int i = 0; i < BattingManager.Instance.BaseCount; i++) BattingManager.Instance.CountScore();
-          // BattingManager.Instance.BaseCount = 0;
+          RunnerManager.Instance.NotifyRunnersFair();
         }
         if (label.Equals("Foul"))
         {

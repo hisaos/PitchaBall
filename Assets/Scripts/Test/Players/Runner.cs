@@ -10,7 +10,7 @@ namespace Test
     private int distinationBase;
     public int DistinationBase { get { return distinationBase; } set { distinationBase = value; } }
 
-    // 今いる塁（塁を離れている時は-1）
+    // 今いる塁
     private int parkingBase;
     public int ParkingBase { get { return parkingBase; } set { parkingBase = value; } }
 
@@ -26,6 +26,9 @@ namespace Test
     private int touchupOutBaseNumber;
     public int TouchupOutBase { get { return touchupOutBaseNumber; } set { touchupOutBaseNumber = value; } }
 
+    // フェア判定がされたかフラグ
+    private bool isFair;
+
     private bool isBatter;
     private float minRunningDistance = 0.05f;
 
@@ -40,10 +43,13 @@ namespace Test
       forceOutBaseNumber = -1;
       touchupOutBaseNumber = -1;
 
-      runnerRigidbody = GetComponent<Rigidbody>();
-
       // Instantiateの時は必ずバッター
       isBatter = true;
+
+      // フェアフラグ降ろして生成
+      isFair = false;
+
+      runnerRigidbody = GetComponent<Rigidbody>();
     }
 
     void FixedUpdate()
@@ -62,7 +68,8 @@ namespace Test
         parkingBase = distinationBase;
         Debug.Log("Now Parking: " + parkingBase);
 
-        if (parkingBase >= 3) HomeIn();
+        // フェア判定が出てる時にホームに付いたら得点
+        if (isFair && parkingBase >= 3) HomeIn();
       }
     }
 
@@ -75,7 +82,8 @@ namespace Test
     // 方向と進塁入力によって進塁する
     public void ProceedBase(int commandNum)
     {
-      if (parkingBase >= 0)
+      // ホームについてたらもう進まない
+      if (parkingBase >= 0 && parkingBase < 3)
       {
         // 全員進塁
         if (commandNum >= 3) distinationBase = parkingBase + 1;
@@ -87,13 +95,40 @@ namespace Test
     // 方向と帰塁入力によって帰塁する
     public void ReturnBase(int commandNum)
     {
-      if (parkingBase > 0)
+      // ホームにいてもまだホームインしてないなら戻れる
+      if (parkingBase > 0 && parkingBase <= 3)
       {
         // 全員帰塁
         if (commandNum >= 3) distinationBase = parkingBase - 1;
         // 選択帰塁
         else if (commandNum == parkingBase) distinationBase = commandNum - 1;
       }
+    }
+
+    // ランナーの状態をリセット
+    public void ResetAtBat()
+    {
+      // フェア判定が付いていなくてバッターだったら消す
+      if (isBatter && !isFair)
+      {
+        Destroy(this.gameObject);
+        return;
+      }
+
+      // 塁の上にいてリセットを受けるならバッターで無くなる
+      isBatter = false;
+
+      // フェア判定が付いていたら到達していた塁に戻す
+      if (isFair) startingBase = parkingBase;
+      else parkingBase = distinationBase = startingBase;
+
+      // 使い終わったらフェアのフラグは降ろす
+      isFair = false;
+
+      // Debug.Log("Starting: " + startingBase + ", Parking: " + parkingBase);
+
+      // 決まった塁に戻す
+      transform.position = BattingManager.Instance.bases[startingBase].position + Vector3.up;
     }
 
     // アウトのメッセージ
@@ -123,14 +158,11 @@ namespace Test
       if (baseNumber == touchupOutBaseNumber) NotifyOut();
     }
 
-    // ランナーの状態をリセット
-    public void ResetAtBat()
+    // フェア判定のメッセージ
+    public void NotifyFair()
     {
-      Debug.Log("Starting: " + startingBase + ", Parking: " + parkingBase);
-      // 塁の上にいてリセットを受けるならバッターで無くなる
-      isBatter = false;
-      startingBase = parkingBase;
-      transform.position = BattingManager.Instance.bases[startingBase].position + Vector3.up;
+      isFair = true;
     }
+
   }
 }

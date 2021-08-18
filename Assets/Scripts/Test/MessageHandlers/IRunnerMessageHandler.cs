@@ -13,6 +13,9 @@ namespace Test
     // 方向と帰塁入力によって帰塁する
     void ReturnBase(int commandNum);
 
+    // ランナーの状態をリセット
+    void ResetAtBat();
+
     // アウトのメッセージ
     void NotifyOut();
 
@@ -25,8 +28,9 @@ namespace Test
     // タッチアップアウトのメッセージ
     void NotifyTouchupOut(int baseNumber);
 
-    // ランナーの状態をリセット
-    void ResetAtBat();
+    // フェアのメッセージ
+    void NotifyFair();
+
   }
 }
 

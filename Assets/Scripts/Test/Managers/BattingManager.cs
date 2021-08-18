@@ -226,9 +226,9 @@ namespace Test
       ballCount++;
       if (ballCount >= 4)
       {
-        // CountBase();
         RunnerManager.Instance.InstantiateRunner();
         RunnerManager.Instance.ProceedAllRunners();
+        RunnerManager.Instance.NotifyRunnersFair();
         ResetCount();
         SetJudgeText("フォアボール");
       }

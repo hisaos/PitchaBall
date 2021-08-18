@@ -144,9 +144,9 @@ namespace Test
       foreach (var r in runners)
       {
         ExecuteEvents.Execute<IRunnerMessageHandler>(
-            target: r.gameObject,
-            eventData: null,
-            functor: (receiver, eventData) => r.ProceedBase(3)
+          target: r.gameObject,
+          eventData: null,
+          functor: (receiver, eventData) => r.ProceedBase(3)
         );
       }
     }
@@ -157,11 +157,25 @@ namespace Test
       foreach (var r in runners)
       {
         ExecuteEvents.Execute<IRunnerMessageHandler>(
-            target: r.gameObject,
-            eventData: null,
-            functor: (receiver, eventData) => r.ResetAtBat()
+          target: r.gameObject,
+          eventData: null,
+          functor: (receiver, eventData) => r.ResetAtBat()
         );
       }
     }
+
+    public void NotifyRunnersFair()
+    {
+      runners = new List<Runner>(GameObject.FindObjectsOfType<Runner>());
+      foreach (var r in runners)
+      {
+        ExecuteEvents.Execute<IRunnerMessageHandler>(
+          target: r.gameObject,
+          eventData: null,
+          functor: (receiver, eventData) => r.NotifyFair()
+        );
+      }
+    }
+
   }
 }
