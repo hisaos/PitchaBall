@@ -154,6 +154,13 @@ namespace Test
         var directionVector = (baseCoverPositionVector[throwDirection] - transform.position).normalized;
         b.transform.localPosition = this.transform.position + directionVector;
         b.GetComponent<Rigidbody>().AddForce(directionVector * throwForce, ForceMode.Impulse);
+
+        ExecuteEvents.Execute<ICameraManagerMessageHander>(
+          target: CameraManager.Instance,
+          eventData: null,
+          functor: (receiver, eventData) => receiver.SwitchCamera(false, b.transform)
+        );
+
       }
     }
 

@@ -62,11 +62,11 @@ namespace Test
       }
       else
       {
-        Debug.Log("Reach: " + distinationBase);
+        // Debug.Log("Reach: " + distinationBase);
         transform.position = BattingManager.Instance.bases[distinationBase].position + Vector3.up;
         runnerRigidbody.velocity = Vector3.zero;
         parkingBase = distinationBase;
-        Debug.Log("Now Parking: " + parkingBase);
+        // Debug.Log("Now Parking: " + parkingBase);
 
         // フェア判定が出てる時にホームに付いたら得点
         if (isFair && parkingBase >= 3) HomeIn();

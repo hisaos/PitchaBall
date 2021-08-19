@@ -125,7 +125,7 @@ namespace Test
       ExecuteEvents.Execute<IBatterMessageHandler>(
         target: batter.gameObject,
         eventData: null,
-        functor: (receiver, eventData) => receiver.NotifyBallThrown()
+        functor: (receiver, eventData) => receiver.NotifyBallThrown(b.gameObject)
       );
     }
 

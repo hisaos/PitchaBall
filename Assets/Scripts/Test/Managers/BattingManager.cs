@@ -66,7 +66,7 @@ namespace Test
     {
       if (Instance == null) Instance = this;
 
-      isTop = true;
+      isTop = false;
       isPitched = false;
       isBatSwung = false;
       isBallBounded = false;

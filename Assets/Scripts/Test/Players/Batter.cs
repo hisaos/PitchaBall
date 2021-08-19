@@ -36,6 +36,12 @@ namespace Test
     public float power = 2f;
     private Bat batComponent;
 
+    // ボールの位置追尾用
+    private GameObject ball;
+    private float prev_bx;
+    private float bx;
+    public Vector3 ball_offset;
+
     [SerializeField] private float moveSpeed;
 
     private void Awake()
@@ -71,7 +77,19 @@ namespace Test
 
     private void FixedUpdate()
     {
+      if (ball)
+      {
+        prev_bx = bx;
+        bx = ball.transform.position.x;
+      }
+
       if (isPlayer) playerRigidbody.velocity = new Vector3(-stickVector.x, 0f, -stickVector.y) * moveSpeed;
+      else
+      {
+        var d = (bx - prev_bx);
+        if (ball) playerRigidbody.velocity = new Vector3(d / Mathf.Abs(d), 0f, 0f) * moveSpeed;
+        else playerRigidbody.velocity = Vector3.zero;
+      }
     }
 
     private void Update()
@@ -91,6 +109,7 @@ namespace Test
 
         if (timeToSwingBat <= 0f)
         {
+          ball = null;
           timeToKeepSwinging = batSwingTime;
         }
         batSwingVector = timeToKeepSwinging >= 0f ? 1f : -1f;
@@ -121,11 +140,14 @@ namespace Test
       isCountingDownToSwing = false;
       batAngle = minBatAngle;
       batSwingVector = -1f;
+      prev_bx = 0f;
+      bx = 0f;
     }
 
-    public void NotifyBallThrown()
+    public void NotifyBallThrown(GameObject ball)
     {
       isCountingDownToSwing = true;
+      this.ball = ball;
     }
 
     void OnCollisionEnter(Collision other)

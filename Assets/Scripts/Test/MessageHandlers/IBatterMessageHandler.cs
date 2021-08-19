@@ -9,6 +9,6 @@ namespace Test
     void EnableBatter();
 
     // ボールが投げられたことを通知
-    void NotifyBallThrown();
+    void NotifyBallThrown(GameObject ball);
   }
 }
