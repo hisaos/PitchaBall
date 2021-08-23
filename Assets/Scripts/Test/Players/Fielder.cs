@@ -161,6 +161,8 @@ namespace Test
           functor: (receiver, eventData) => receiver.SwitchCamera(false, b.transform)
         );
 
+        // ボールインプレイのフラグを立てる
+        BattingManager.Instance.IsBallPlaying = true;
       }
     }
 
@@ -168,7 +170,12 @@ namespace Test
     {
       if (other.gameObject.CompareTag("Ball"))
       {
+        // ボールインプレイのフラグを降ろす
+        BattingManager.Instance.IsBallPlaying = false;
+
+        // ボールを持っているフラグを建てる
         hasBall = true;
+
         // 打球を消す
         foreach (var f in fielders)
         {

@@ -29,6 +29,10 @@ namespace Test
     // フェア判定がされたかフラグ
     private bool isFair;
 
+    // 走っているかフラグ
+    private bool isRunning;
+    public bool IsRunning { get { return isRunning; } private set { isRunning = value; } }
+
     private bool isBatter;
     private float minRunningDistance = 0.05f;
 
@@ -49,6 +53,9 @@ namespace Test
       // フェアフラグ降ろして生成
       isFair = false;
 
+      // 生成時は走っている
+      isRunning = true;
+
       runnerRigidbody = GetComponent<Rigidbody>();
     }
 
@@ -58,6 +65,7 @@ namespace Test
       var dist2d = new Vector3(dist.x, 0f, dist.z);
       if (dist2d.sqrMagnitude >= minRunningDistance)
       {
+        isRunning = true;
         runnerRigidbody.velocity = (dist2d.normalized * runningSpeed);
       }
       else
@@ -68,6 +76,7 @@ namespace Test
         parkingBase = distinationBase;
         // Debug.Log("Now Parking: " + parkingBase);
 
+        isRunning = false;
         // フェア判定が出てる時にホームに付いたら得点
         if (isFair && parkingBase >= 3) HomeIn();
       }

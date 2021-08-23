@@ -26,17 +26,23 @@ namespace Test
         if (label.Equals("Score"))
         {
           BattingManager.Instance.SetJudgeText("はいった");
+          // ホームランは戻す
+          BattingManager.Instance.TriggerReturn();
           BattingManager.Instance.ResetCount();
           RunnerManager.Instance.NotifyRunnersFair();
         }
         if (label.Equals("Foul"))
         {
           BattingManager.Instance.SetJudgeText("ファール");
+          // ファールは戻す
+          BattingManager.Instance.TriggerReturn();
           BattingManager.Instance.CountStrike(true);
         }
         if (label.Equals("Strike"))
         {
           BattingManager.Instance.SetJudgeText("ストライク");
+          // ストライクは戻す
+          BattingManager.Instance.TriggerReturn();
           BattingManager.Instance.CountStrike(false);
           Destroy(other.gameObject);
         }
@@ -45,11 +51,15 @@ namespace Test
           if (BattingManager.Instance.IsBatSwung)
           {
             BattingManager.Instance.SetJudgeText("ストライク");
+            // ストライクは戻す
+            BattingManager.Instance.TriggerReturn();
             BattingManager.Instance.CountStrike(false);
           }
           else
           {
             BattingManager.Instance.SetJudgeText("ボール");
+            // ボールは戻す
+            BattingManager.Instance.TriggerReturn();
             BattingManager.Instance.CountBall();
           }
 

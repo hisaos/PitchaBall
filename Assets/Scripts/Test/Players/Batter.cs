@@ -86,9 +86,9 @@ namespace Test
       if (isPlayer) playerRigidbody.velocity = new Vector3(-stickVector.x, 0f, -stickVector.y) * moveSpeed;
       else
       {
-        var d = (bx - prev_bx);
-        if (ball) playerRigidbody.velocity = new Vector3(d / Mathf.Abs(d), 0f, 0f) * moveSpeed;
-        else playerRigidbody.velocity = Vector3.zero;
+        // var d = (bx - prev_bx);
+        // if (ball) playerRigidbody.velocity = new Vector3(d / Mathf.Abs(d), 0f, 0f) * moveSpeed;
+        // else playerRigidbody.velocity = Vector3.zero;
       }
     }
 
@@ -166,6 +166,7 @@ namespace Test
         RunnerManager.Instance.InstantiateRunner();
         RunnerManager.Instance.ProceedAllRunners();
         RunnerManager.Instance.NotifyRunnersFair();
+        BattingManager.Instance.TriggerReturn();
 
         Destroy(other.gameObject);
       }

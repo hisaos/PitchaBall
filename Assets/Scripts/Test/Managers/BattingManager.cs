@@ -51,6 +51,14 @@ namespace Test
     private bool isPitched;
     public bool IsPitched { get { return isPitched; } set { isPitched = value; } }
 
+    // 元に戻すまでの時間
+    private float timeToReturn;
+    private const float timeToReturnInitiate = 3f;
+
+    // ボールインプレイのフラグ。ボールが打たれてから野手に取られるまでtrue
+    private bool isBallPlaying;
+    public bool IsBallPlaying { get { return isBallPlaying; } set { isBallPlaying = value; } }
+
     private GameObject pitcher;
     private GameObject batter;
     private List<Fielder> fielders;
@@ -66,7 +74,7 @@ namespace Test
     {
       if (Instance == null) Instance = this;
 
-      isTop = false;
+      isTop = true;
       isPitched = false;
       isBatSwung = false;
       isBallBounded = false;
@@ -88,6 +96,14 @@ namespace Test
 
     void Update()
     {
+      if (!isBallPlaying && !RunnerManager.Instance.IsRunning) timeToReturn -= Time.deltaTime;
+      else timeToReturn = timeToReturnInitiate;
+
+      if (timeToReturn <= 0f) 
+      {
+        if (!IsInvoking(nameof(ResumeToStart))) Invoke(nameof(ResumeToStart), 0f);
+      }
+
       RemainText.text = "のこり：" + remain.ToString();
       ScoreText0.text = "1P：" + score0.ToString();
       ScoreText1.text = "2P：" + score1.ToString();
@@ -97,8 +113,15 @@ namespace Test
     {
       JudgeText.text = judge;
       JudgeText.enabled = true;
+      if (outCount >= 3)
+      {
+        ProceedInning();
+        TriggerReturn();
+      }
+    }
 
-      if (outCount >= 3) ProceedInning();
+    public void TriggerReturn()
+    {
       if (!IsInvoking(nameof(ResumeToStart))) Invoke(nameof(ResumeToStart), 3f);
     }
 
@@ -188,6 +211,9 @@ namespace Test
       // ピッチャーの投げた判定をリセット
       isPitched = false;
 
+      // ボールインプレイのフラグをリセット
+      isBallPlaying = true;
+
       // 野手の位置を元に戻して動かなくする
       foreach (var f in fielders)
       {
@@ -216,7 +242,9 @@ namespace Test
         else
         {
           CountOut();
-          SetJudgeText("アウト");
+          SetJudgeText("バッターアウト");
+          // バッターアウトなので戻す
+          TriggerReturn();
         }
       }
     }
@@ -231,6 +259,7 @@ namespace Test
         RunnerManager.Instance.NotifyRunnersFair();
         ResetCount();
         SetJudgeText("フォアボール");
+        TriggerReturn();
       }
     }
 
@@ -246,6 +275,7 @@ namespace Test
       outCount++;
     }
 
+    // 1Pと2Pどっちが攻撃か表示
     IEnumerator ShowWhoIsAtBat(string text)
     {
       JudgeText.enabled = true;

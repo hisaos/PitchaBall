@@ -17,6 +17,8 @@ namespace Test
 
     private List<Runner> runners;
     public GameObject runnerPrefab;
+    private bool isRunning;
+    public bool IsRunning { get; private set; }
     private bool isPlayer;
 
     void Awake()
@@ -54,6 +56,11 @@ namespace Test
 
     void Update()
     {
+      // ランナーの動いている状態を更新（どこか別の場所に置く）
+      var runners = new List<Runner>(GameObject.FindObjectsOfType<Runner>());
+      isRunning = false;
+      foreach (var r in runners) isRunning |= r.IsRunning;
+
       stickVector = inputActions.Player.Move.ReadValue<Vector2>();
 
       if (isPlayer)
@@ -79,6 +86,7 @@ namespace Test
 
     }
 
+    // 打者の位置にランナーを出す
     public void InstantiateRunner()
     {
       Instantiate(runnerPrefab, BattingManager.Instance.bases[3].position + Vector3.up, Quaternion.identity);
