@@ -33,6 +33,9 @@ namespace Test
     // 送球スピード
     public float throwForce = 0.8f;
 
+    // 送球方向（ボールを持って歩く時も共用）
+    private int throwDirection;
+
     // 守備位置、塁位置関連
     // 守備位置番号(1-9)
     public int fielderPositionNumber;
@@ -53,6 +56,15 @@ namespace Test
       inputActions.Player.A.performed += (context) =>
       {
         if (isPlayer && hasBall) ExecuteThrow();
+      };
+
+      inputActions.Player.B.performed += (context) =>
+      {
+        if (isPlayer && hasBall)
+        {
+          isCoveringBase = true;
+          coveringBaseNumber = throwDirection;
+        }
       };
 
       isPlayer = false;
@@ -87,6 +99,9 @@ namespace Test
     void Update()
     {
       stickVector = inputActions.Player.Move.ReadValue<Vector2>();
+
+      // 送球方向をアップデート
+      UpdateThrowDirection();
     }
 
     void FixedUpdate()
@@ -126,6 +141,28 @@ namespace Test
       }
     }
 
+    // 送球方向を決める
+    private void UpdateThrowDirection()
+    {
+      var x = stickVector.x;
+      var y = stickVector.y;
+      throwDirection = 0;
+
+      if (x >= throwDirectionFlux)
+      {
+        throwDirection = 0;
+      }
+      else if (x >= -throwDirectionFlux)
+      {
+        if (y >= throwDirectionFlux) throwDirection = 1;
+        if (y < -throwDirectionFlux) throwDirection = 3;
+      }
+      else
+      {
+        throwDirection = 2;
+      }
+    }
+
     private void ExecuteThrow()
     {
       var b = Instantiate(ball);
@@ -133,28 +170,29 @@ namespace Test
 
       if (isPlayer)
       {
-        // 送球方向を決める
-        var x = stickVector.x;
-        var y = stickVector.y;
-        var throwDirection = 0;
+        // // 送球方向を決める
+        // var x = stickVector.x;
+        // var y = stickVector.y;
+        // throwDirection = 0;
 
-        if (x >= throwDirectionFlux)
-        {
-          throwDirection = 0;
-        }
-        else if (x >= -throwDirectionFlux)
-        {
-          if (y >= throwDirectionFlux) throwDirection = 1;
-          if (y < -throwDirectionFlux) throwDirection = 3;
-        }
-        else
-        {
-          throwDirection = 2;
-        }
+        // if (x >= throwDirectionFlux)
+        // {
+        //   throwDirection = 0;
+        // }
+        // else if (x >= -throwDirectionFlux)
+        // {
+        //   if (y >= throwDirectionFlux) throwDirection = 1;
+        //   if (y < -throwDirectionFlux) throwDirection = 3;
+        // }
+        // else
+        // {
+        //   throwDirection = 2;
+        // }
         var directionVector = (baseCoverPositionVector[throwDirection] - transform.position).normalized;
         b.transform.localPosition = this.transform.position + directionVector;
         b.GetComponent<Rigidbody>().AddForce(directionVector * throwForce, ForceMode.Impulse);
 
+        // FieldCameraの追跡対象を投げたボールにする
         ExecuteEvents.Execute<ICameraManagerMessageHander>(
           target: CameraManager.Instance,
           eventData: null,
@@ -197,6 +235,14 @@ namespace Test
           // BattingManager.Instance.CountOut();
           // BattingManager.Instance.SetJudgeText("アウト");
         }
+
+        // FieldCameraの追跡対象をこのFielderにする
+        ExecuteEvents.Execute<ICameraManagerMessageHander>(
+          target: CameraManager.Instance,
+          eventData: null,
+          functor: (receiver, eventData) => receiver.SwitchCamera(false, this.transform)
+        );
+
         Destroy(other.gameObject);
       }
     }
