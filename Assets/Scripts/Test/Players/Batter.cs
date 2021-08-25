@@ -16,6 +16,7 @@ namespace Test
     private Vector2 stickVector;
 
     private Rigidbody playerRigidbody;
+    private Collider playerCollider;
 
     public GameObject Bat;
     private GameObject bat;
@@ -50,6 +51,7 @@ namespace Test
 
       inputActions = new InputActions();
       playerRigidbody = GetComponent<Rigidbody>();
+      playerCollider = GetComponent<Collider>();
 
       // バットの配置
       pivot = this.transform.position;
@@ -63,7 +65,12 @@ namespace Test
       inputActions.Player.A.performed += (context) =>
       {
         // batAngleを増やしてバットを振る
-        if (isPlayer) batSwingVector = 1f;
+        // バットを振ったらデッドボールしなくなる
+        if (isPlayer)
+        {
+          batSwingVector = 1f;
+          playerCollider.enabled = false;
+        }
       };
       inputActions.Player.A.canceled += (context) =>
       {
@@ -135,6 +142,10 @@ namespace Test
       // Debug.Log(this.gameObject.name + ": EnableBatter");
       this.transform.position = initialPosition;
       isPlayer = BattingManager.Instance.IsTop;
+
+      // コライダーの状態を元に戻しておく（デッドボール発生する）
+      playerCollider.enabled = true;
+      
       timeToSwingBat = 0.7f + Random.Range(-0.1f, 0.1f);
       timeToKeepSwinging = -1f;
       isCountingDownToSwing = false;
