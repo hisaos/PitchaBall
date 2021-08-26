@@ -141,7 +141,7 @@ namespace Test
       }
     }
 
-    // 送球方向を決める
+    // 送球・塁カバーに歩いていく方向を決める
     private void UpdateThrowDirection()
     {
       var x = stickVector.x;
@@ -170,24 +170,7 @@ namespace Test
 
       if (isPlayer)
       {
-        // // 送球方向を決める
-        // var x = stickVector.x;
-        // var y = stickVector.y;
-        // throwDirection = 0;
-
-        // if (x >= throwDirectionFlux)
-        // {
-        //   throwDirection = 0;
-        // }
-        // else if (x >= -throwDirectionFlux)
-        // {
-        //   if (y >= throwDirectionFlux) throwDirection = 1;
-        //   if (y < -throwDirectionFlux) throwDirection = 3;
-        // }
-        // else
-        // {
-        //   throwDirection = 2;
-        // }
+        // ボールを飛ばす方向を決める
         var directionVector = (baseCoverPositionVector[throwDirection] - transform.position).normalized;
         b.transform.localPosition = this.transform.position + directionVector;
         b.GetComponent<Rigidbody>().AddForce(directionVector * throwForce, ForceMode.Impulse);
@@ -232,8 +215,6 @@ namespace Test
 
           // アウトの処理
           RunnerManager.Instance.NotifyRunnerOut(1, -1);
-          // BattingManager.Instance.CountOut();
-          // BattingManager.Instance.SetJudgeText("アウト");
         }
 
         // FieldCameraの追跡対象をこのFielderにする

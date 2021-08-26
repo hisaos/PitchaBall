@@ -18,10 +18,18 @@ namespace Test
     private Rigidbody playerRigidbody;
     private Collider playerCollider;
 
+    // バット周り
     public GameObject Bat;
     private GameObject bat;
+    private Bat batComponent;
+
+    // 打力
+    public float power = 2f;
+
     private Vector3 pivot;
     private float batAngle;
+
+    // バットの動く向き
     private float batSwingVector;
     public float maxBatAngle = 90f;
     public float minBatAngle = -90f;
@@ -33,9 +41,6 @@ namespace Test
     private bool isCountingDownToSwing = false;
     private float timeToSwingBat;
     private float timeToKeepSwinging = -1f;
-
-    public float power = 2f;
-    private Bat batComponent;
 
     // ボールの位置追尾用
     private GameObject ball;
@@ -70,6 +75,7 @@ namespace Test
         {
           batSwingVector = 1f;
           playerCollider.enabled = false;
+          batComponent.EnableBat();
         }
       };
       inputActions.Player.A.canceled += (context) =>
@@ -90,6 +96,7 @@ namespace Test
         bx = ball.transform.position.x;
       }
 
+      // バッターボックスの中でバッターを動かす
       if (isPlayer) playerRigidbody.velocity = new Vector3(-stickVector.x, 0f, -stickVector.y) * moveSpeed;
       else
       {
@@ -128,8 +135,16 @@ namespace Test
     private void SwingBat()
     {
       batAngle += batSwingVector * batSwingSpeed;
-      if (batAngle > maxBatAngle) batAngle = maxBatAngle;
-      else if (batAngle < minBatAngle) batAngle = minBatAngle;
+      if (batAngle > maxBatAngle)
+      {
+        batAngle = maxBatAngle;
+        batComponent.DisableBat();
+      }
+      else if (batAngle < minBatAngle)
+      {
+        batAngle = minBatAngle;
+        batComponent.DisableBat();
+      }
 
       // Pitcherが投げた後にバットがスイングしてるか判定
       if (BattingManager.Instance.IsPitched && batAngle > 0f) BattingManager.Instance.IsBatSwung = true;
@@ -145,7 +160,7 @@ namespace Test
 
       // コライダーの状態を元に戻しておく（デッドボール発生する）
       playerCollider.enabled = true;
-      
+
       timeToSwingBat = 0.7f + Random.Range(-0.1f, 0.1f);
       timeToKeepSwinging = -1f;
       isCountingDownToSwing = false;

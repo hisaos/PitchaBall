@@ -90,9 +90,14 @@ namespace Test
       }
     }
 
-    void EnableBat()
+    public void EnableBat()
     {
       batCollider.enabled = true;
+    }
+
+    public void DisableBat()
+    {
+      batCollider.enabled = false;
     }
   }
 }
