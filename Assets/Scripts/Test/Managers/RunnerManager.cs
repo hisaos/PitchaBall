@@ -18,7 +18,7 @@ namespace Test
     private List<Runner> runners;
     public GameObject runnerPrefab;
     private bool isRunning;
-    public bool IsRunning { get; private set; }
+    public bool IsRunning { get { return isRunning; } private set { isRunning = value; } }
     private bool isPlayer;
 
     void Awake()
@@ -60,6 +60,7 @@ namespace Test
       var runners = new List<Runner>(GameObject.FindObjectsOfType<Runner>());
       isRunning = false;
       foreach (var r in runners) isRunning |= r.IsRunning;
+      Debug.Log("IsRunning: " + isRunning);
 
       stickVector = inputActions.Player.Move.ReadValue<Vector2>();
 

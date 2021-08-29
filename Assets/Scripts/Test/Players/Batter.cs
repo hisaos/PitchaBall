@@ -22,6 +22,7 @@ namespace Test
     public GameObject Bat;
     private GameObject bat;
     private Bat batComponent;
+    private bool canSwingBat;
 
     // 打力
     public float power = 2f;
@@ -71,11 +72,12 @@ namespace Test
       {
         // batAngleを増やしてバットを振る
         // バットを振ったらデッドボールしなくなる
-        if (isPlayer)
+        if (canSwingBat && isPlayer)
         {
           batSwingVector = 1f;
           playerCollider.enabled = false;
           batComponent.EnableBat();
+          canSwingBat = false;
         }
       };
       inputActions.Player.A.canceled += (context) =>
@@ -121,10 +123,12 @@ namespace Test
         // Debug.Log("TimeToSwing: " + timeToSwingBat);
         if (timeToKeepSwinging >= 0f) timeToKeepSwinging -= Time.deltaTime;
 
+        // ここでバットを振る
         if (timeToSwingBat <= 0f)
         {
           ball = null;
           timeToKeepSwinging = batSwingTime;
+          canSwingBat = false;
         }
         batSwingVector = timeToKeepSwinging >= 0f ? 1f : -1f;
       }
@@ -144,6 +148,7 @@ namespace Test
       {
         batAngle = minBatAngle;
         batComponent.DisableBat();
+        canSwingBat = true;
       }
 
       // Pitcherが投げた後にバットがスイングしてるか判定
@@ -183,17 +188,15 @@ namespace Test
         // 判定済みなら何もしない
         if (BattingManager.Instance.IsBallBounded) return;
 
+        BattingManager.Instance.SetJudgeText("デッドボール");
+
         // バウンド判定つける
         BattingManager.Instance.IsBallBounded = true;
 
-        // デッドボールはランナーを出す
-        BattingManager.Instance.SetJudgeText("デッドボール");
-        BattingManager.Instance.ResetCount();
-        RunnerManager.Instance.InstantiateRunner();
-        RunnerManager.Instance.ProceedAllRunners();
-        RunnerManager.Instance.NotifyRunnersFair();
-        BattingManager.Instance.TriggerReturn();
+        // 進塁処理
+        BattingManager.Instance.BallDeadProceedRunner();
 
+        // ボールは消しとく
         Destroy(other.gameObject);
       }
     }

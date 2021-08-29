@@ -111,10 +111,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Bat: {fileID: 0}
+  power: 1
   maxBatAngle: 90
   minBatAngle: -90
-  batSwingSpeed: 5
-  power: 1
+  batSwingSpeed: 3
+  ball_offset: {x: 0, y: 0, z: 0}
   moveSpeed: 1
 --- !u!54 &7496100118716703446
 Rigidbody:

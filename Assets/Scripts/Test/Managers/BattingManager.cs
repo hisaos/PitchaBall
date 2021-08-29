@@ -55,9 +55,13 @@ namespace Test
     private float timeToReturn;
     private const float timeToReturnInitiate = 3f;
 
-    // ボールインプレイのフラグ。ボールが打たれてから野手に取られるまでtrue
+    // ボールインプレイのフラグ。ピッチャーがボールを投げてから野手に取られるまでtrue
     private bool isBallPlaying;
     public bool IsBallPlaying { get { return isBallPlaying; } set { isBallPlaying = value; } }
+
+    // ボールが打たれたフラグ
+    private bool isBallHit;
+    public bool IsBallHit { get { return isBallHit; } set { isBallHit = value; } }
 
     private GameObject pitcher;
     private GameObject batter;
@@ -96,10 +100,12 @@ namespace Test
 
     void Update()
     {
+      Debug.Log("BM - IsRunning: " + RunnerManager.Instance.IsRunning);
       if (!isBallPlaying && !RunnerManager.Instance.IsRunning) timeToReturn -= Time.deltaTime;
       else timeToReturn = timeToReturnInitiate;
+      Debug.Log("TimeToReturn: " + timeToReturn);
 
-      if (timeToReturn <= 0f) 
+      if (timeToReturn <= 0f)
       {
         if (!IsInvoking(nameof(ResumeToStart))) Invoke(nameof(ResumeToStart), 0f);
       }
@@ -195,6 +201,9 @@ namespace Test
         functor: (receiver, eventData) => receiver.EnableBatter()
       );
 
+      // ボールが打たれたフラグを降ろす
+      isBallHit = false;
+
       // カメラをMainCameraに切り替え
       ExecuteEvents.Execute<ICameraManagerMessageHander>(
         target: CameraManager.Instance,
@@ -249,17 +258,25 @@ namespace Test
       }
     }
 
+    // 四死球時の進塁
+    public void BallDeadProceedRunner()
+    {
+      BattingManager.Instance.ResetCount();
+      // 四死球時はボールデッド
+      BattingManager.Instance.IsBallPlaying = false;
+      RunnerManager.Instance.InstantiateRunner();
+      RunnerManager.Instance.ProceedAllRunners();
+      RunnerManager.Instance.NotifyRunnersFair();
+    }
+
     public void CountBall()
     {
       ballCount++;
       if (ballCount >= 4)
       {
-        RunnerManager.Instance.InstantiateRunner();
-        RunnerManager.Instance.ProceedAllRunners();
-        RunnerManager.Instance.NotifyRunnersFair();
-        ResetCount();
         SetJudgeText("フォアボール");
-        TriggerReturn();
+        if (IsInvoking(nameof(ResumeToStart))) CancelInvoke(nameof(ResumeToStart));
+        BallDeadProceedRunner();
       }
     }
 

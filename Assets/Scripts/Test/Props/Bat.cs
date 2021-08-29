@@ -60,6 +60,9 @@ namespace Test
           functor: (receiver, eventData) => receiver.SwitchCamera(false, ballTransform)
         );
 
+        // ボールが打たれたことを伝える
+        BattingManager.Instance.IsBallHit = true;
+
         // 野手に打球の情報を伝える
         foreach (var f in fielders)
         {

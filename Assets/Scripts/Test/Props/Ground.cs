@@ -40,27 +40,49 @@ namespace Test
         }
         if (label.Equals("Strike"))
         {
-          BattingManager.Instance.SetJudgeText("ストライク");
-          // ストライクは戻す
-          BattingManager.Instance.TriggerReturn();
-          BattingManager.Instance.CountStrike(false);
-          Destroy(other.gameObject);
-        }
-        if (label.Equals("Far"))
-        {
-          if (BattingManager.Instance.IsBatSwung)
+          if (BattingManager.Instance.IsBallHit)
+          {
+            // ボールにかすってたらファール
+            BattingManager.Instance.SetJudgeText("ファール");
+            // ファールは戻す
+            BattingManager.Instance.TriggerReturn();
+            BattingManager.Instance.CountStrike(true);
+          }
+          else
           {
             BattingManager.Instance.SetJudgeText("ストライク");
             // ストライクは戻す
             BattingManager.Instance.TriggerReturn();
             BattingManager.Instance.CountStrike(false);
+            Destroy(other.gameObject);
+          }
+        }
+        if (label.Equals("Far"))
+        {
+          if (BattingManager.Instance.IsBallHit)
+          {
+            // ボールにかすってたらファール
+            BattingManager.Instance.SetJudgeText("ファール");
+            // ファールは戻す
+            BattingManager.Instance.TriggerReturn();
+            BattingManager.Instance.CountStrike(true);
           }
           else
           {
-            BattingManager.Instance.SetJudgeText("ボール");
-            // ボールは戻す
-            BattingManager.Instance.TriggerReturn();
-            BattingManager.Instance.CountBall();
+            if (BattingManager.Instance.IsBatSwung)
+            {
+              BattingManager.Instance.SetJudgeText("ストライク");
+              // ストライクは戻す
+              BattingManager.Instance.TriggerReturn();
+              BattingManager.Instance.CountStrike(false);
+            }
+            else
+            {
+              BattingManager.Instance.SetJudgeText("ボール");
+              // ボールは戻す
+              BattingManager.Instance.TriggerReturn();
+              BattingManager.Instance.CountBall();
+            }
           }
 
           Destroy(other.gameObject);

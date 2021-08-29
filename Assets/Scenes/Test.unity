@@ -5274,6 +5274,11 @@ PrefabInstance:
       propertyPath: ball_offset.x
       value: -0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 7496100118716703447, guid: 43f19d2760ee57a48821746696cc4836,
+        type: 3}
+      propertyPath: batSwingSpeed
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7496100118716703448, guid: 43f19d2760ee57a48821746696cc4836,
         type: 3}
       propertyPath: m_RootOrder
