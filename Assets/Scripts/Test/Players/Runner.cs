@@ -7,24 +7,24 @@ namespace Test
   public class Runner : MonoBehaviour, IRunnerMessageHandler
   {
     // 進塁先
-    private int distinationBase;
-    public int DistinationBase { get { return distinationBase; } set { distinationBase = value; } }
+    private int distinationBaseNumber;
+    public int DistinationBaseNumber { get { return distinationBaseNumber; } set { distinationBaseNumber = value; } }
 
     // 今いる塁
-    private int parkingBase;
-    public int ParkingBase { get { return parkingBase; } set { parkingBase = value; } }
+    private int parkingBaseNumber;
+    public int ParkingBaseNumber { get { return parkingBaseNumber; } set { parkingBaseNumber = value; } }
 
     // プレイ開始時にいた塁
-    private int startingBase;
-    public int StartingBase { get { return startingBase; } set { startingBase = value; } }
+    private int startingBaseNumber;
+    public int StartingBaseNumber { get { return startingBaseNumber; } set { startingBaseNumber = value; } }
 
     // そこにボールを持った野手が入ったらフォースアウトになる塁
     private int forceOutBaseNumber;
-    public int ForceOutBase { get { return forceOutBaseNumber; } set { forceOutBaseNumber = value; } }
+    public int ForceOutBaseNumber { get { return forceOutBaseNumber; } set { forceOutBaseNumber = value; } }
 
     // そこにボールを持った野手が入ったらタッチアップのアウトになる塁
     private int touchupOutBaseNumber;
-    public int TouchupOutBase { get { return touchupOutBaseNumber; } set { touchupOutBaseNumber = value; } }
+    public int TouchupOutBaseNumber { get { return touchupOutBaseNumber; } set { touchupOutBaseNumber = value; } }
 
     // フェア判定がされたかフラグ
     private bool isFair;
@@ -41,10 +41,12 @@ namespace Test
 
     void Awake()
     {
-      distinationBase = 0;
-      startingBase = -1;
-      parkingBase = -1;
-      forceOutBaseNumber = -1;
+      // 生成時は1塁（0）に向かい、1塁がフォースアウト
+      distinationBaseNumber = 0;
+      forceOutBaseNumber = 0;
+
+      startingBaseNumber = -1;
+      parkingBaseNumber = -1;
       touchupOutBaseNumber = -1;
 
       // Instantiateの時は必ずバッター
@@ -61,7 +63,7 @@ namespace Test
 
     void FixedUpdate()
     {
-      var dist = BattingManager.Instance.bases[distinationBase].position - transform.position;
+      var dist = BattingManager.Instance.bases[distinationBaseNumber].position - transform.position;
       var dist2d = new Vector3(dist.x, 0f, dist.z);
       if (dist2d.sqrMagnitude >= minRunningDistance)
       {
@@ -71,14 +73,21 @@ namespace Test
       else
       {
         // Debug.Log("Reach: " + distinationBase);
-        transform.position = BattingManager.Instance.bases[distinationBase].position + Vector3.up;
+        transform.position = BattingManager.Instance.bases[distinationBaseNumber].position + Vector3.up;
         runnerRigidbody.velocity = Vector3.zero;
-        parkingBase = distinationBase;
+        parkingBaseNumber = distinationBaseNumber;
         // Debug.Log("Now Parking: " + parkingBase);
 
+        // タッチアップの対象に着いたらタッチアップ状態をリセット
+        if (parkingBaseNumber == touchupOutBaseNumber) touchupOutBaseNumber = -1;
+
+        // フォースアウトの対象に着いたらフォースアウト状態をリセット
+        if (parkingBaseNumber == forceOutBaseNumber) forceOutBaseNumber = -1;
+
         isRunning = false;
+
         // フェア判定が出てる時にホームに付いたら得点
-        if (isFair && parkingBase >= 3) HomeIn();
+        if (isFair && parkingBaseNumber >= 3) HomeIn();
       }
     }
 
@@ -91,13 +100,16 @@ namespace Test
     // 方向と進塁入力によって進塁する
     public void ProceedBase(int commandNum)
     {
+      // 無効なコマンドをはじく
+      if (commandNum < 0 || commandNum > 3) return;
+
       // ホームについてたらもう進まない
-      if (parkingBase >= 0 && parkingBase < 3)
+      if (parkingBaseNumber >= 0 && parkingBaseNumber < 3)
       {
         // 全員進塁
-        if (commandNum >= 3) distinationBase = parkingBase + 1;
+        if (commandNum >= 3) distinationBaseNumber = parkingBaseNumber + 1;
         // 選択進塁
-        else if (commandNum == parkingBase) distinationBase = commandNum + 1;
+        else if (commandNum == parkingBaseNumber) distinationBaseNumber = commandNum + 1;
       }
     }
 
@@ -105,12 +117,12 @@ namespace Test
     public void ReturnBase(int commandNum)
     {
       // ホームにいてもまだホームインしてないなら戻れる
-      if (parkingBase > 0 && parkingBase <= 3)
+      if (parkingBaseNumber > 0 && parkingBaseNumber <= 3)
       {
         // 全員帰塁
-        if (commandNum >= 3) distinationBase = parkingBase - 1;
+        if (commandNum >= 3) distinationBaseNumber = parkingBaseNumber - 1;
         // 選択帰塁
-        else if (commandNum == parkingBase) distinationBase = commandNum - 1;
+        else if (commandNum == parkingBaseNumber) distinationBaseNumber = commandNum - 1;
       }
     }
 
@@ -128,8 +140,11 @@ namespace Test
       isBatter = false;
 
       // フェア判定が付いていたら到達していた塁に戻す
-      if (isFair) startingBase = parkingBase;
-      else parkingBase = distinationBase = startingBase;
+      if (isFair) startingBaseNumber = parkingBaseNumber;
+      else parkingBaseNumber = distinationBaseNumber = startingBaseNumber;
+
+      // タッチアップ状態を解除
+      touchupOutBaseNumber = -1;
 
       // 使い終わったらフェアのフラグは降ろす
       isFair = false;
@@ -137,7 +152,7 @@ namespace Test
       // Debug.Log("Starting: " + startingBase + ", Parking: " + parkingBase);
 
       // 決まった塁に戻す
-      transform.position = BattingManager.Instance.bases[startingBase].position + Vector3.up;
+      transform.position = BattingManager.Instance.bases[startingBaseNumber].position + Vector3.up;
     }
 
     // アウトのメッセージ
@@ -161,10 +176,22 @@ namespace Test
       if (baseNumber == forceOutBaseNumber) NotifyOut();
     }
 
+    // フォースアウトになる塁を通知される
+    public void NotifyForceOutBaseNumber()
+    {
+      forceOutBaseNumber = RunnerManager.Instance.QueryChasingRunners(startingBaseNumber);
+    }
+
     // タッチアップアウトのメッセージ
     public void NotifyTouchupOut(int baseNumber)
     {
       if (baseNumber == touchupOutBaseNumber) NotifyOut();
+    }
+
+    // タッチアップアウトになる塁を通知される
+    public void NotifyTouchupOutBaseNumber()
+    {
+      touchupOutBaseNumber = startingBaseNumber;
     }
 
     // フェア判定のメッセージ

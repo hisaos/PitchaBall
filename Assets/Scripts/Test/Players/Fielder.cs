@@ -123,6 +123,25 @@ namespace Test
             // ある程度カバーする塁に近づいていたら塁にスナップして止める
             transform.position = baseCoverPositionVector[coveringBaseNumber];
             fielderRigidbody.velocity = Vector3.zero;
+
+            if (hasBall)
+            {
+              // 塁上でボールを持ってたらタッチアップアウトとフォースアウトの宣言をして引っ掛かるランナーをアウトにする
+              var runners = GameObject.FindObjectsOfType<Runner>();
+              foreach (var r in runners)
+              {
+                ExecuteEvents.Execute<IRunnerMessageHandler>(
+                  target: r.gameObject,
+                  eventData: null,
+                  functor: (receiver, eventData) =>
+                  {
+                    r.NotifyForceOut(coveringBaseNumber);
+                    r.NotifyTouchupOut(coveringBaseNumber);
+                  }
+                );
+              }
+            }
+
           }
         }
         else
@@ -148,19 +167,11 @@ namespace Test
       var y = stickVector.y;
       throwDirection = 0;
 
-      if (x >= throwDirectionFlux)
-      {
-        throwDirection = 0;
-      }
-      else if (x >= -throwDirectionFlux)
-      {
-        if (y >= throwDirectionFlux) throwDirection = 1;
-        if (y < -throwDirectionFlux) throwDirection = 3;
-      }
-      else
-      {
-        throwDirection = 2;
-      }
+      if (x >= throwDirectionFlux) throwDirection = 0;
+      else if (x <= -throwDirectionFlux) throwDirection = 2;
+      else if (y >= throwDirectionFlux) throwDirection = 1;
+      else if (y <= -throwDirectionFlux) throwDirection = 3;
+      else throwDirection = 0;
     }
 
     private void ExecuteThrow()
@@ -215,6 +226,21 @@ namespace Test
 
           // アウトの処理
           RunnerManager.Instance.NotifyRunnerOut(1, -1);
+
+          // 残っているランナーにタッチアップとフォースアウトになる塁の変更を通知
+          var runners = GameObject.FindObjectsOfType<Runner>();
+          foreach (var r in runners)
+          {
+            ExecuteEvents.Execute<IRunnerMessageHandler>(
+              target: r.gameObject,
+              eventData: null,
+              functor: (receiver, eventData) =>
+              {
+                receiver.NotifyForceOutBaseNumber();
+                receiver.NotifyTouchupOutBaseNumber();
+              }
+            );
+          }
         }
 
         // FieldCameraの追跡対象をこのFielderにする

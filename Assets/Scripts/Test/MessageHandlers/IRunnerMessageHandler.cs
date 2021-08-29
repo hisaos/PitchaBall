@@ -25,8 +25,14 @@ namespace Test
     // フォースアウトのメッセージ
     void NotifyForceOut(int baseNumber);
 
+    // フォースアウトになる塁を指定
+    void NotifyForceOutBaseNumber();
+
     // タッチアップアウトのメッセージ
     void NotifyTouchupOut(int baseNumber);
+
+    // タッチアップアウトの塁を指定
+    void NotifyTouchupOutBaseNumber();
 
     // フェアのメッセージ
     void NotifyFair();

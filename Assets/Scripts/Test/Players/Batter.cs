@@ -66,7 +66,7 @@ namespace Test
       batSwingVector = -1f;
       batAngle = minBatAngle;
       batComponent = bat.GetComponentInChildren<Bat>();
-      timeToSwingBat = 0.7f + Random.Range(-0.1f, 0.1f);
+      timeToSwingBat = 0.8f + Random.Range(-0.1f, 0.1f);
 
       inputActions.Player.A.performed += (context) =>
       {
@@ -166,7 +166,7 @@ namespace Test
       // コライダーの状態を元に戻しておく（デッドボール発生する）
       playerCollider.enabled = true;
 
-      timeToSwingBat = 0.7f + Random.Range(-0.1f, 0.1f);
+      timeToSwingBat = 0.8f + Random.Range(-0.1f, 0.1f);
       timeToKeepSwinging = -1f;
       isCountingDownToSwing = false;
       batAngle = minBatAngle;

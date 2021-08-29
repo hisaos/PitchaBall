@@ -100,10 +100,8 @@ namespace Test
 
     void Update()
     {
-      Debug.Log("BM - IsRunning: " + RunnerManager.Instance.IsRunning);
       if (!isBallPlaying && !RunnerManager.Instance.IsRunning) timeToReturn -= Time.deltaTime;
       else timeToReturn = timeToReturnInitiate;
-      Debug.Log("TimeToReturn: " + timeToReturn);
 
       if (timeToReturn <= 0f)
       {
@@ -146,6 +144,9 @@ namespace Test
       // 裏なら残りを減らす
       if (!isTop) remain--;
 
+      // 残っていたランナーを消す
+      RunnerManager.Instance.ClearRunner();
+
       // 残り回数0になったら終了
       if (remain <= 0)
       {
@@ -182,7 +183,7 @@ namespace Test
       OutCountText.text = "アウト：" + outCount.ToString();
 
       // ランナーの状態を更新
-      RunnerManager.Instance.UpdateRunners();
+      RunnerManager.Instance.ResetRunnersAtBat();
 
       // ボールを片づける
       Destroy(GameObject.FindGameObjectWithTag("Ball"));
@@ -265,7 +266,7 @@ namespace Test
       // 四死球時はボールデッド
       BattingManager.Instance.IsBallPlaying = false;
       RunnerManager.Instance.InstantiateRunner();
-      RunnerManager.Instance.ProceedAllRunners();
+      RunnerManager.Instance.ProceedRunnersAtBallDead();
       RunnerManager.Instance.NotifyRunnersFair();
     }
 

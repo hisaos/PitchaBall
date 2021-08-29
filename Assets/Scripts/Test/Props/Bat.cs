@@ -69,7 +69,8 @@ namespace Test
           ExecuteEvents.Execute<IFielderMessageHandler>(
             target: f.gameObject,
             eventData: null,
-            functor: (receiver, eventData) => {
+            functor: (receiver, eventData) =>
+            {
               receiver.EnableFielderMove();
               receiver.NotifyBallAngle(batAngle);
               receiver.SetFielderBall(other.gameObject);
@@ -77,14 +78,18 @@ namespace Test
           );
         }
 
-        // 既存のランナーを走らせる
+        // 既存のランナーにフォースアウトになる塁を通知した上で、走らせ始める
         var runners = FindObjectsOfType<Runner>();
         foreach (var r in runners)
         {
           ExecuteEvents.Execute<IRunnerMessageHandler>(
             target: r.gameObject,
             eventData: null,
-            functor: (receiver, eventData) => receiver.ProceedBase(3)
+            functor: (receiver, eventData) =>
+            {
+              receiver.NotifyForceOutBaseNumber();
+              receiver.ProceedBase(3);
+            }
           );
         }
 

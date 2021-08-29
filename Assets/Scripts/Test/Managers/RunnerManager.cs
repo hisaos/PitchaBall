@@ -12,7 +12,7 @@ namespace Test
     private InputActions inputActions;
 
     private Vector2 stickVector;
-    private float runningDirectionFlux;
+    private const float runningDirectionFlux = 0.2f;
     private int runningCommandNum;
 
     private List<Runner> runners;
@@ -56,33 +56,29 @@ namespace Test
 
     void Update()
     {
-      // ランナーの動いている状態を更新（どこか別の場所に置く）
-      var runners = new List<Runner>(GameObject.FindObjectsOfType<Runner>());
+      // ランナーの動いている状態を更新
+      // Todo: runnersはランナーの状態が変わった時だけ取得してソートして持っておく
+      runners = new List<Runner>(GameObject.FindObjectsOfType<Runner>());
+      runners.Sort((a, b) => b.StartingBaseNumber - a.StartingBaseNumber);
+
       isRunning = false;
       foreach (var r in runners) isRunning |= r.IsRunning;
-      Debug.Log("IsRunning: " + isRunning);
 
       stickVector = inputActions.Player.Move.ReadValue<Vector2>();
 
       if (isPlayer)
       {
-        // 送球方向を決める
+        // 方向を決める
         var x = stickVector.x;
         var y = stickVector.y;
 
-        if (x >= runningDirectionFlux)
-        {
-          runningCommandNum = 0;
-        }
-        else if (x >= -runningDirectionFlux)
-        {
-          if (y >= runningDirectionFlux) runningCommandNum = 1;
-          if (y < -runningDirectionFlux) runningCommandNum = 3;
-        }
-        else
-        {
-          runningCommandNum = 2;
-        }
+        if (x >= runningDirectionFlux) runningCommandNum = 0;
+        else if (x <= -runningDirectionFlux) runningCommandNum = 2;
+        else if (y >= runningDirectionFlux) runningCommandNum = 1;
+        else if (y <= -runningDirectionFlux) runningCommandNum = 3;
+        else runningCommandNum = -1;
+
+        // Debug.Log("x: " + x + " y: " + y + " rc: " + runningCommandNum);
       }
 
     }
@@ -93,6 +89,15 @@ namespace Test
       Instantiate(runnerPrefab, BattingManager.Instance.bases[3].position + Vector3.up, Quaternion.identity);
     }
 
+    public void ClearRunner()
+    {
+      foreach (var r in runners)
+      {
+        Destroy(r.gameObject);
+      }
+    }
+
+    // ランナーにアウトを通知（多分後で消す）
     public void NotifyRunnerOut(int type, int baseNum)
     {
       var runners = new List<Runner>(GameObject.FindObjectsOfType<Runner>());
@@ -147,20 +152,30 @@ namespace Test
 
     }
 
-    public void ProceedAllRunners()
+    // ボールデッドして進塁させる用
+    public void ProceedRunnersAtBallDead()
     {
       var runners = new List<Runner>(GameObject.FindObjectsOfType<Runner>());
+      runners.Sort((a, b) => a.ParkingBaseNumber - b.ParkingBaseNumber);
+      var index = -1;
       foreach (var r in runners)
       {
-        ExecuteEvents.Execute<IRunnerMessageHandler>(
-          target: r.gameObject,
-          eventData: null,
-          functor: (receiver, eventData) => r.ProceedBase(3)
-        );
+        Debug.Log("runner parking: " + r.ParkingBaseNumber);
+        if (r.ParkingBaseNumber == index)
+        {
+          ExecuteEvents.Execute<IRunnerMessageHandler>(
+            target: r.gameObject,
+            eventData: null,
+            functor: (receiver, eventData) => r.ProceedBase(3)
+          );
+          index++;
+        }
+        else break;
       }
     }
 
-    public void UpdateRunners()
+    // 打撃にカメラを戻す時にランナー全員にリセットを掛ける
+    public void ResetRunnersAtBat()
     {
       runners = new List<Runner>(GameObject.FindObjectsOfType<Runner>());
       foreach (var r in runners)
@@ -173,9 +188,28 @@ namespace Test
       }
     }
 
+    // 後続のランナーで塁が埋まってるかのクエリ
+    public int QueryChasingRunners(int startingBaseNumber)
+    {
+      var index = startingBaseNumber;
+      foreach (var r in runners)
+      {
+        // 自分は必ずrunnersにいるのでそこまでリストを繰る
+        if (r.StartingBaseNumber > index) continue;
+        else
+        {
+          // 途中で番号が飛んでたらフォースアウトではない
+          if (r.StartingBaseNumber != index) return -1;
+          else index--;
+        }
+      }
+      // 最後まで繰れたらフォースアウトを今いる次の塁に設定する
+      return startingBaseNumber + 1;
+    }
+
     public void NotifyRunnersFair()
     {
-      runners = new List<Runner>(GameObject.FindObjectsOfType<Runner>());
+      var runners = FindObjectsOfType<Runner>();
       foreach (var r in runners)
       {
         ExecuteEvents.Execute<IRunnerMessageHandler>(
@@ -184,6 +218,16 @@ namespace Test
           functor: (receiver, eventData) => r.NotifyFair()
         );
       }
+    }
+
+    private void OnEnable()
+    {
+      inputActions.Player.Enable();
+    }
+
+    private void OnDisable()
+    {
+      inputActions.Player.Disable();
     }
 
   }
