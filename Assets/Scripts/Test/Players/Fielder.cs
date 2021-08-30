@@ -252,6 +252,34 @@ namespace Test
 
         Destroy(other.gameObject);
       }
+
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+      if (hasBall && other.gameObject.CompareTag("Runner"))
+      {
+        ExecuteEvents.Execute<IRunnerMessageHandler>(
+          target: other.gameObject,
+          eventData: null,
+          functor: (receiver, eventData) => receiver.NotifyTouchOut()
+        );
+
+        // 残っているランナーにタッチアップとフォースアウトになる塁の変更を通知
+        var runners = GameObject.FindObjectsOfType<Runner>();
+        foreach (var r in runners)
+        {
+          ExecuteEvents.Execute<IRunnerMessageHandler>(
+            target: r.gameObject,
+            eventData: null,
+            functor: (receiver, eventData) =>
+            {
+              receiver.NotifyForceOutBaseNumber();
+            }
+          );
+        }
+
+      }
     }
 
     void OnEnable()

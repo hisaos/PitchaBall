@@ -163,6 +163,13 @@ namespace Test
       Destroy(this.gameObject);
     }
 
+    // タッチアウトのメッセージ
+    public void NotifyTouchOut()
+    {
+      if (isRunning) NotifyOut();
+      else BattingManager.Instance.SetJudgeText("セーフ");
+    }
+
     // フライアウトのメッセージ
     public void NotifyFlyOut()
     {

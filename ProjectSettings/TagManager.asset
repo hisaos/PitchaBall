@@ -15,6 +15,7 @@ TagManager:
   - Fair
   - Strike
   - Far
+  - Runner
   layers:
   - Default
   - TransparentFX

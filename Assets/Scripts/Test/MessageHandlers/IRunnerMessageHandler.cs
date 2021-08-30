@@ -19,6 +19,9 @@ namespace Test
     // アウトのメッセージ
     void NotifyOut();
 
+    // タッチアウトのメッセージ
+    void NotifyTouchOut();
+
     // フライアウトのメッセージ
     void NotifyFlyOut();
 

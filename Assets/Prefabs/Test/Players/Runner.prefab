@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6003761464335550498}
   m_Layer: 0
   m_Name: Runner
-  m_TagString: Untagged
+  m_TagString: Runner
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -92,8 +92,8 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1122038772490367817}
   m_Material: {fileID: 13400000, guid: 2946812ffa8d7c24d9c52a7beee44628, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 0
+  m_IsTrigger: 1
+  m_Enabled: 1
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
