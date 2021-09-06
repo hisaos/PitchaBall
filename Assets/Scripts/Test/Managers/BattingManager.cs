@@ -260,14 +260,23 @@ namespace Test
     }
 
     // 四死球時の進塁
-    public void BallDeadProceedRunner()
+    public void ProceedRunnerAtBat()
     {
       BattingManager.Instance.ResetCount();
       // 四死球時はボールデッド
       BattingManager.Instance.IsBallPlaying = false;
       RunnerManager.Instance.InstantiateRunner();
-      RunnerManager.Instance.ProceedRunnersAtBallDead();
+      RunnerManager.Instance.ProceedRunnersAtBat();
       RunnerManager.Instance.NotifyRunnersFair();
+    }
+
+    // エンタイトル時の進塁
+    public void ProceedRunnerEntitled(int numBases)
+    {
+      BattingManager.Instance.ResetCount();
+      // エンタイトルしたらボールデッド
+      BattingManager.Instance.IsBallPlaying = false;
+      RunnerManager.Instance.ProceedRunnersEntitled(numBases);
     }
 
     public void CountBall()
@@ -277,7 +286,7 @@ namespace Test
       {
         SetJudgeText("フォアボール");
         if (IsInvoking(nameof(ResumeToStart))) CancelInvoke(nameof(ResumeToStart));
-        BallDeadProceedRunner();
+        ProceedRunnerAtBat();
       }
     }
 

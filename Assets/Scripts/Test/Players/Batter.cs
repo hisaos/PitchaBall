@@ -194,7 +194,7 @@ namespace Test
         BattingManager.Instance.IsBallBounded = true;
 
         // 進塁処理
-        BattingManager.Instance.BallDeadProceedRunner();
+        BattingManager.Instance.ProceedRunnerAtBat();
 
         // ボールは消しとく
         Destroy(other.gameObject);

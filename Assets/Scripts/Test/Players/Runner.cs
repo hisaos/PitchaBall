@@ -34,6 +34,8 @@ namespace Test
     public bool IsRunning { get { return isRunning; } private set { isRunning = value; } }
 
     private bool isBatter;
+    public bool IsBatter { get { return isBatter; } set { isBatter = value; } }
+
     private float minRunningDistance = 0.05f;
 
     private Rigidbody runnerRigidbody;
@@ -120,15 +122,23 @@ namespace Test
       if (parkingBaseNumber > 0 && parkingBaseNumber <= 3)
       {
         // 全員帰塁
-        if (commandNum >= 3) distinationBaseNumber = parkingBaseNumber - 1;
+        if (commandNum >= 3) distinationBaseNumber = parkingBaseNumber;
         // 選択帰塁
-        else if (commandNum == parkingBaseNumber) distinationBaseNumber = commandNum - 1;
+        else if (commandNum == parkingBaseNumber) distinationBaseNumber = commandNum;
       }
     }
 
     // ランナーの状態をリセット
     public void ResetAtBat()
     {
+      // エンタイトル・ホームランの後でホームを越えてたら得点にする
+      if (startingBaseNumber > 2)
+      {
+        BattingManager.Instance.CountScore();
+        Destroy(this.gameObject);
+        return;
+      }
+
       // フェア判定が付いていなくてバッターだったら消す
       if (isBatter && !isFair)
       {
@@ -138,7 +148,6 @@ namespace Test
 
       // 塁の上にいてリセットを受けるならバッターで無くなる
       isBatter = false;
-
       // フェア判定が付いていたら到達していた塁に戻す
       if (isFair) startingBaseNumber = parkingBaseNumber;
       else parkingBaseNumber = distinationBaseNumber = startingBaseNumber;
@@ -205,6 +214,12 @@ namespace Test
     public void NotifyFair()
     {
       isFair = true;
+    }
+
+    // フェア判定を取り消すメッセージ（エンタイトル処理用）
+    public void DisnotifyFair()
+    {
+      isFair = false;
     }
 
   }

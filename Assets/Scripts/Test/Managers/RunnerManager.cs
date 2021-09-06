@@ -16,6 +16,13 @@ namespace Test
     private int runningCommandNum;
 
     private List<Runner> runners;
+
+    // エンタイトル処理用のキャッシュ
+    // 投球時のランナーのキャッシュ
+    private List<Runner> runnersAtPitch;
+    // 打者ランナーのキャッシュ
+    private Runner runnerAtBat;
+
     public GameObject runnerPrefab;
     private bool isRunning;
     public bool IsRunning { get { return isRunning; } private set { isRunning = value; } }
@@ -86,7 +93,8 @@ namespace Test
     // 打者の位置にランナーを出す
     public void InstantiateRunner()
     {
-      Instantiate(runnerPrefab, BattingManager.Instance.bases[3].position + Vector3.up, Quaternion.identity);
+      var r = Instantiate(runnerPrefab, BattingManager.Instance.bases[3].position + Vector3.up, Quaternion.identity);
+      runnerAtBat = r.GetComponent<Runner>();
     }
 
     public void ClearRunner()
@@ -152,15 +160,15 @@ namespace Test
 
     }
 
-    // ボールデッドして進塁させる用
-    public void ProceedRunnersAtBallDead()
+    // デッドボール・四球で進塁させる用
+    public void ProceedRunnersAtBat()
     {
       var runners = new List<Runner>(GameObject.FindObjectsOfType<Runner>());
       runners.Sort((a, b) => a.ParkingBaseNumber - b.ParkingBaseNumber);
       var index = -1;
       foreach (var r in runners)
       {
-        Debug.Log("runner parking: " + r.ParkingBaseNumber);
+        // Debug.Log("runner parking: " + r.ParkingBaseNumber);
         if (r.ParkingBaseNumber == index)
         {
           ExecuteEvents.Execute<IRunnerMessageHandler>(
@@ -174,8 +182,45 @@ namespace Test
       }
     }
 
-    // 打撃にカメラを戻す時にランナー全員にリセットを掛ける
+    // エンタイトルツーベース・ホームランで進塁させる用
+    public void ProceedRunnersEntitled(int numBases)
+    {
+      runners = runnersAtPitch;
+      if (runnerAtBat)
+      {
+        Debug.Log("Added runner at bat");
+        runners.Add(runnerAtBat);
+      }
+
+      foreach (var r in runners)
+      {
+        ExecuteEvents.Execute<IRunnerMessageHandler>(
+          target: r.gameObject,
+          eventData: null,
+          functor: (receiver, eventData) => 
+          {
+            r.IsBatter = false;
+            r.StartingBaseNumber = r.StartingBaseNumber + numBases;
+          }
+        );
+      }
+
+    }
+
+    // バッターランナーのキャッシュを取る
+    public void CacheRunnerAtBat(Runner r)
+    {
+      runnerAtBat = r;
+    }
+
+    // 塁にいるランナーのキャッシュを取る
+    public void CacheRunnersAtPitch()
+    {
+      runnersAtPitch = new List<Runner>(GameObject.FindObjectsOfType<Runner>());
+    }
+
     public void ResetRunnersAtBat()
+    // 打撃にカメラを戻す時にランナー全員にリセットを掛ける
     {
       runners = new List<Runner>(GameObject.FindObjectsOfType<Runner>());
       foreach (var r in runners)
@@ -216,6 +261,19 @@ namespace Test
           target: r.gameObject,
           eventData: null,
           functor: (receiver, eventData) => r.NotifyFair()
+        );
+      }
+    }
+
+    public void DisnotifyRunnersFair()
+    {
+      var runners = FindObjectsOfType<Runner>();
+      foreach (var r in runners)
+      {
+        ExecuteEvents.Execute<IRunnerMessageHandler>(
+          target: r.gameObject,
+          eventData: null,
+          functor: (receiver, eventData) => r.DisnotifyFair()
         );
       }
     }

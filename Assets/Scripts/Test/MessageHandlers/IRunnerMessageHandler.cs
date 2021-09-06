@@ -40,6 +40,8 @@ namespace Test
     // フェアのメッセージ
     void NotifyFair();
 
+    // フェアのメッセージを取り消す（エンタイトル処理用）
+    void DisnotifyFair();
   }
 }
 

@@ -122,6 +122,9 @@ namespace Test
       isPitched = true;
       BattingManager.Instance.IsPitched = true;
 
+      // 投球時のランナーを記憶
+      RunnerManager.Instance.CacheRunnersAtPitch();
+
       ExecuteEvents.Execute<IBatterMessageHandler>(
         target: batter.gameObject,
         eventData: null,

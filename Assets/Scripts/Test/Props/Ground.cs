@@ -10,13 +10,14 @@ namespace Test
     {
       if (other.gameObject.CompareTag("Ball"))
       {
+        var label = this.gameObject.tag;
+
         // 判定済みなら何もしない
         if (BattingManager.Instance.IsBallBounded) return;
 
         // グラウンドにボールが触れた時点でバウンド判定
         BattingManager.Instance.IsBallBounded = true;
 
-        var label = this.gameObject.tag;
         if (label.Equals("Fair"))
         {
           BattingManager.Instance.SetJudgeText("ヒット");
@@ -30,20 +31,26 @@ namespace Test
           BattingManager.Instance.TriggerReturn();
           BattingManager.Instance.ResetCount();
           RunnerManager.Instance.NotifyRunnersFair();
+          BattingManager.Instance.ProceedRunnerEntitled(4);
         }
         if (label.Equals("Foul"))
         {
           BattingManager.Instance.SetJudgeText("ファール");
+          // ファール時はボールデッド
+          BattingManager.Instance.IsBallPlaying = false;
           // ファールは戻す
           BattingManager.Instance.TriggerReturn();
           BattingManager.Instance.CountStrike(true);
         }
+
         if (label.Equals("Strike"))
         {
           if (BattingManager.Instance.IsBallHit)
           {
             // ボールにかすってたらファール
             BattingManager.Instance.SetJudgeText("ファール");
+            // ファール時はボールデッド
+            BattingManager.Instance.IsBallPlaying = false;
             // ファールは戻す
             BattingManager.Instance.TriggerReturn();
             BattingManager.Instance.CountStrike(true);
@@ -63,6 +70,8 @@ namespace Test
           {
             // ボールにかすってたらファール
             BattingManager.Instance.SetJudgeText("ファール");
+            // ファール時はボールデッド
+            BattingManager.Instance.IsBallPlaying = false;
             // ファールは戻す
             BattingManager.Instance.TriggerReturn();
             BattingManager.Instance.CountStrike(true);

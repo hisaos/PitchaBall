@@ -114,7 +114,7 @@ MonoBehaviour:
   power: 1
   maxBatAngle: 90
   minBatAngle: -90
-  batSwingSpeed: 3
+  batSwingSpeed: 2
   ball_offset: {x: 0, y: 0, z: 0}
   moveSpeed: 1
 --- !u!54 &7496100118716703446
